@@ -1,11 +1,8 @@
 <script setup>
-
 </script>
 
 <template>
-  <h1>🐖🐷🐽🐗</h1>
+  <Layout2 />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

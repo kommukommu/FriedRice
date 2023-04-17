@@ -8,13 +8,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.2.45"
+    "element-plus": "^2.3.1",
+    "node-sass": "^8.0.0",
+    "vue": "^3.2.45",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "eslint": "^8.35.0",
     "eslint-plugin-vue": "^9.9.0",
+    "sass": "^1.59.3",
     "unplugin-auto-import": "^0.15.1",
+    "unplugin-element-plus": "^0.7.0",
     "unplugin-vue-components": "^0.24.1",
     "vite": "^4.0.0"
   }
