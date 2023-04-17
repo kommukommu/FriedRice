@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <Layout2 />
+  <Layout />
 </template>
 
 <style scoped></style>

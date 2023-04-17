@@ -1,38 +1,9 @@
 <template>
-  <el-container class="layout-container-demo" style="height: auto">
-    <el-aside width="200px">
-      <el-scrollbar>
-        <el-menu :default-openeds="['1']">
-          <!-- <el-sub-menu index="1">
-            <template #title>
-              <el-icon>
-                <message />
-              </el-icon>Navigator One
-            </template>
-            <el-menu-item-group>
-              <template #title>Group 1</template>
-              <el-menu-item index="1-1">Option 1</el-menu-item>
-              <el-menu-item index="1-2">Option 2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="Group 2">
-              <el-menu-item index="1-3">Option 3</el-menu-item>
-            </el-menu-item-group>
-            <el-sub-menu index="1-4">
-              <template #title>Option4</template>
-              <el-menu-item index="1-4-1">Option 4-1</el-menu-item>
-            </el-sub-menu>
-          </el-sub-menu> -->
-          <el-menu-item index="1">Option 1</el-menu-item>
-          <el-menu-item index="2">Option 2</el-menu-item>
-          <el-menu-item index="3">Option 3</el-menu-item>
-          <el-menu-item index="4">Option 4</el-menu-item>
-        </el-menu>
-      </el-scrollbar>
-    </el-aside>
-
-    <el-container>
-      <el-header style="text-align: right; font-size: 12px">
+  <div>
+    <el-container class="layout-container-demo">
+      <el-header class="layout-header">
         <div class="toolbar">
+          <el-input v-model="inputSearch" class="input-search" placeholder="Type something" :prefix-icon="Search" />
           <el-dropdown>
             <el-icon style="margin-right: 8px; margin-top: 1px">
               <setting />
@@ -48,38 +19,39 @@
           <span>Tom</span>
         </div>
       </el-header>
-
-      <el-main>
-        <el-scrollbar>
-          <el-table :data="tableData">
-            <el-table-column prop="date" label="Date" width="140" />
-            <el-table-column prop="name" label="Name" width="120" />
-            <el-table-column prop="address" label="Address" />
-          </el-table>
-        </el-scrollbar>
-      </el-main>
+      <el-main class="layout-main">Main</el-main>
+      <el-footer class="layout-footer">Footer</el-footer>
     </el-container>
-  </el-container>
+  </div>
 </template>
 
 <script setup>
+import { Menu as Setting, Search } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
 
-const item = {
-  date: '2016-05-02',
-  name: 'Tom',
-  address: 'No. 189, Grove St, Los Angeles',
-}
-const tableData = ref(Array.from({ length: 20 }).fill(item))
+let inputSearch = ref('')
+
 </script>
-
+  
 <style scoped>
 .layout-container-demo {
   display: flex;
+  height: 800px;
 }
 
 .layout-container-demo .el-header {
+  position: relative;
+  background-color: var(--el-color-primary-light-7);
+  color: var(--el-text-color-primary);
+}
+
+.layout-container-demo .el-main {
+  position: relative;
+  background-color: var(--el-color-primary-light-9);
+  color: var(--el-text-color-primary);
+}
+
+.layout-container-demo .el-footer {
   position: relative;
   background-color: var(--el-color-primary-light-7);
   color: var(--el-text-color-primary);
@@ -104,5 +76,19 @@ const tableData = ref(Array.from({ length: 20 }).fill(item))
   justify-content: center;
   height: 100%;
   right: 20px;
+  width: 100%;
+}
+
+.layout-container-demo .layout-header {
+  width: 100%;
+  text-align: right;
+  font-size: 12px;
+}
+
+.layout-container-demo .input-search {
+  display: inline-flex;
+  margin: auto;
+  width: 70%;
+  min-width: 100px;
 }
 </style>
