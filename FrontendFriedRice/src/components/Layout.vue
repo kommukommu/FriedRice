@@ -6,7 +6,7 @@
           <el-input v-model="inputSearch" class="input-search" placeholder="Type something" :prefix-icon="Search" />
           <el-dropdown>
             <el-icon style="margin-right: 8px; margin-top: 1px">
-              <setting />
+              <User />
             </el-icon>
             <template #dropdown>
               <el-dropdown-menu>
@@ -19,15 +19,16 @@
           <span>Tom</span>
         </div>
       </el-header>
-      <el-main class="layout-main">Main</el-main>
+      <el-main class="layout-main"><Homepage /></el-main>
       <el-footer class="layout-footer">Footer</el-footer>
     </el-container>
   </div>
 </template>
 
 <script setup>
-import { Menu as Setting, Search } from '@element-plus/icons-vue'
+import { User, Search } from '@element-plus/icons-vue'
 import { ref } from 'vue'
+import Homepage from './Main/Homepage.vue';
 
 let inputSearch = ref('')
 
@@ -36,7 +37,7 @@ let inputSearch = ref('')
 <style scoped>
 .layout-container-demo {
   display: flex;
-  height: 800px;
+  height: 80%;
 }
 
 .layout-container-demo .el-header {
@@ -82,7 +83,7 @@ let inputSearch = ref('')
 .layout-container-demo .layout-header {
   width: 100%;
   text-align: right;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .layout-container-demo .input-search {
