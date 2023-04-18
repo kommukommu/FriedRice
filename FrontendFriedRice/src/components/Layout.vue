@@ -3,19 +3,29 @@
     <el-container class="layout-container-demo">
       <el-header class="layout-header">
         <div class="toolbar">
+          <span class="layout-homepage">
+            <el-button>
+              <el-icon style="margin-right: 8px; margin-bottom: 1px;">
+                <House />
+              </el-icon>
+              首页
+            </el-button>
+          </span>
           <span class="layout-search">
             <el-input v-model="inputSearch" placeholder="Type something" :prefix-icon="Search" />
             <el-button>
-              <el-icon style="margin-right: 8px; margin-bottom: 1px;">
+              <el-icon style="">
                 <Search />
               </el-icon>
-              搜索
             </el-button>
           </span>
           <el-dropdown>
-            <el-icon style="margin-right: 8px; margin-top: 1px">
-              <User />
-            </el-icon>
+            <span class="layout-user">
+              <el-icon style="margin-right: 8px;">
+                <User />
+              </el-icon>
+              Tom
+            </span>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>View</el-dropdown-item>
@@ -24,11 +34,10 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <span>Tom</span>
         </div>
       </el-header>
       <el-main class="layout-main">
-        <Homepage />
+        <Project />
       </el-main>
       <el-footer class="layout-footer">Footer</el-footer>
     </el-container>
@@ -36,9 +45,10 @@
 </template>
 
 <script setup>
-import { User, Search } from '@element-plus/icons-vue'
+import { User, Search, House } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import Homepage from './Main/Homepage.vue';
+import Project from './Main/Project.vue';
 
 const inputSearch = ref('')
 
@@ -83,16 +93,22 @@ const inputSearch = ref('')
 
 .layout-container-demo .toolbar {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content: center; */
   height: 100%;
   right: 20px;
   width: 100%;
 }
 
+.layout-container-demo .toolbar .layout-user{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
 .layout-container-demo .layout-header {
   width: 100%;
-  text-align: right;
   font-size: 16px;
 }
 
@@ -106,12 +122,25 @@ const inputSearch = ref('')
 .layout-container-demo .layout-search .el-input {
   display: inline-flex;
   margin-right: 10px;
-  width: 90%;
+  width: 100%;
   min-width: 100px;
 }
 
 .layout-container-demo .layout-search .el-button {
   display: inline-flex;
-  width: 80px;
+  width: 10px;
+}
+
+.layout-container-demo .layout-homepage {
+  display: inline-flex;
+  margin: auto;
+  /* left: 20px; */
+  margin-left: 0;
+  width: 100px
+}
+
+.layout-container-demo .layout-homepage .el-button {
+  display: inline-flex;
+  /* width: 60px; */
 }
 </style>
