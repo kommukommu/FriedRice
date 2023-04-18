@@ -2,11 +2,10 @@
     <div>
         <el-space direction="vertical" fill fill-ratio=98 class="container">
             <template class="space" />
-            <el-card v-for="i in 4" :key="i" class="box-card">
+            <el-card v-for="i in 4" :key="i" class="box-card" shadow="hover" @click="openNewProject">
                 <template #header>
                     <div class="card-header">
                         <span>Card name</span>
-                        <el-button class="button" text>Operation button</el-button>
                     </div>
                 </template>
                 <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
@@ -16,6 +15,10 @@
     </div>
 </template>
 <script setup>
+function openNewProject (event){
+    alert(i)
+    console.log(event);
+}
 </script>
 <style scoped>
 .container{

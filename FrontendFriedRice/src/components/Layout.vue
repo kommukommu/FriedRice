@@ -3,7 +3,15 @@
     <el-container class="layout-container-demo">
       <el-header class="layout-header">
         <div class="toolbar">
-          <el-input v-model="inputSearch" class="input-search" placeholder="Type something" :prefix-icon="Search" />
+          <span class="layout-search">
+            <el-input v-model="inputSearch" placeholder="Type something" :prefix-icon="Search" />
+            <el-button>
+              <el-icon style="margin-right: 8px; margin-bottom: 1px;">
+                <Search />
+              </el-icon>
+              搜索
+            </el-button>
+          </span>
           <el-dropdown>
             <el-icon style="margin-right: 8px; margin-top: 1px">
               <User />
@@ -19,7 +27,9 @@
           <span>Tom</span>
         </div>
       </el-header>
-      <el-main class="layout-main"><Homepage /></el-main>
+      <el-main class="layout-main">
+        <Homepage />
+      </el-main>
       <el-footer class="layout-footer">Footer</el-footer>
     </el-container>
   </div>
@@ -30,7 +40,7 @@ import { User, Search } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import Homepage from './Main/Homepage.vue';
 
-let inputSearch = ref('')
+const inputSearch = ref('')
 
 </script>
   
@@ -86,10 +96,22 @@ let inputSearch = ref('')
   font-size: 16px;
 }
 
-.layout-container-demo .input-search {
+.layout-container-demo .layout-search {
   display: inline-flex;
   margin: auto;
-  width: 70%;
+  width: 80%;
   min-width: 100px;
+}
+
+.layout-container-demo .layout-search .el-input {
+  display: inline-flex;
+  margin-right: 10px;
+  width: 90%;
+  min-width: 100px;
+}
+
+.layout-container-demo .layout-search .el-button {
+  display: inline-flex;
+  width: 80px;
 }
 </style>
