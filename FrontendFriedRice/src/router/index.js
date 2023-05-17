@@ -3,6 +3,11 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Homepage from "../components/Main/Homepage.vue"
 import Project from '../components/Main/Project.vue'
 import Article from '../components/Main/Article.vue'
+import Userpage from "../components/Main/Userpage.vue"
+
+import SubscriptionList from "../components/Main/User/SubscriptionList.vue"
+import ProjectList from "../components/Main/User/ProjectList.vue"
+import ArticleList from "../components/Main/User/ArticleList.vue"
 
 // 定义路由组件
 // const Home = { template: '<div>Home</div>' }
@@ -24,6 +29,29 @@ const routes = [
         name: 'Article',
         path: '/Article',
         component: Article
+    },
+    {
+        name: 'User',
+        path: '/User',
+        component: Userpage,
+        redirect: {name: ProjectList},
+        children: [
+            {
+                name: 'SubscriptionList',
+                path: 'subscriptionList',
+                component: SubscriptionList
+            },
+            {
+                name: 'ProjectList',
+                path: 'projectList',
+                component: ProjectList
+            },
+            {
+                name: 'ArticleList',
+                path: 'articleList',
+                component: ArticleList
+            }
+        ]
     },
 ]
 

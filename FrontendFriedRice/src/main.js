@@ -7,6 +7,14 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const app = createApp(App)
 
+const globalVar = {
+    value: '',
+    set(val){
+        this.value = val
+    }
+}
+app.provide('$globalVar', globalVar);
+
 app.use(ElementPlusIconsVue)
 app.use(router)
 
