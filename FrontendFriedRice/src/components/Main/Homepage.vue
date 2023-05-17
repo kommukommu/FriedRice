@@ -1,8 +1,8 @@
 <template>
     <div>
-        <el-space direction="vertical" fill fill-ratio=98 class="container">
-            <template class="space" />
-            <el-card v-for="i in 4" :key="i" class="box-card" shadow="hover" @click="openNewProject">
+        <el-space direction="vertical" fill :fill-ratio="98" class="container">
+            <!-- <template class="space" /> -->
+            <el-card v-for="i in 4" :key="i" class="box-card" shadow="hover" @click="openNewProject($event, i)">
                 <template #header>
                     <div class="card-header">
                         <span>{{ '项目' + i }}</span>
@@ -18,9 +18,15 @@
     </div>
 </template>
 <script setup>
-function openNewProject(event) {
-    alert(i)
-    console.log(event);
+import { useRoute,useRouter } from 'vue-router';
+
+const router = useRouter()
+
+function openNewProject(event, i) {
+    // alert(i)
+    console.log(router.push({
+        name:"Project"
+    }));
 }
 </script>
 <style scoped>
@@ -37,6 +43,7 @@ function openNewProject(event) {
 .space {
     height: 8px;
 }
+
 .writer {
     text-align: right;
 }

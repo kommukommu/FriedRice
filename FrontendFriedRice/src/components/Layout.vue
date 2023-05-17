@@ -4,7 +4,7 @@
       <el-header class="layout-header">
         <div class="toolbar">
           <span class="layout-homepage">
-            <el-button>
+            <el-button @click="goHomePage">
               <el-icon style="margin-right: 8px; margin-bottom: 1px;">
                 <House />
               </el-icon>
@@ -37,7 +37,9 @@
         </div>
       </el-header>
       <el-main class="layout-main">
-        <Project />
+        <div style="margin: 10px 0">
+          <router-view></router-view>
+        </div>
       </el-main>
       <el-footer class="layout-footer">Footer</el-footer>
     </el-container>
@@ -47,11 +49,18 @@
 <script setup>
 import { User, Search, House } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import Homepage from './Main/Homepage.vue';
-import Project from './Main/Project.vue';
+import { useRoute, useRouter } from 'vue-router';
+// import Homepage from './Main/Homepage.vue';
+// import Project from './Main/Project.vue';
 
+const router = useRouter()
 const inputSearch = ref('')
 
+function goHomePage() {
+  router.push({
+    name: "Home"
+  })
+}
 </script>
   
 <style scoped>
@@ -100,7 +109,7 @@ const inputSearch = ref('')
   width: 100%;
 }
 
-.layout-container-demo .toolbar .layout-user{
+.layout-container-demo .toolbar .layout-user {
   display: inline-flex;
   align-items: center;
   justify-content: center;
