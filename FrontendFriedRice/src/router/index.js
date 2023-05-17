@@ -34,8 +34,17 @@ const routes = [
         name: 'User',
         path: '/User',
         component: Userpage,
-        redirect: {name: ProjectList},
+        redirect: {
+            name: 'ProjectList'
+        },
         children: [
+            // {
+            //     // name: 'User',
+            //     path: '',
+            //     redirect: {
+            //         name: ProjectList
+            //     },
+            // },
             {
                 name: 'SubscriptionList',
                 path: 'subscriptionList',

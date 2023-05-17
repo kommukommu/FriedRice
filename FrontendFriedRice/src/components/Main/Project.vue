@@ -82,9 +82,9 @@ const tableData = [
 
 function openArticle() {
     // alert(i)
-    console.log(router.push({
+    router.push({
         name: "Article"
-    }));
+    });
 }
 </script>
 

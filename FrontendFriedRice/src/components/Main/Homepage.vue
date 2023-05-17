@@ -24,9 +24,9 @@ const router = useRouter()
 
 function openNewProject(event, i) {
     // alert(i)
-    console.log(router.push({
+    router.push({
         name:"Project"
-    }));
+    });
 }
 </script>
 <style scoped>
