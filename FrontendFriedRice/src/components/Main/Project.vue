@@ -2,6 +2,11 @@
     <div>
         <el-space direction="vertical" fill :fill-ratio="98" class="container">
             <!-- <template class="space" /> -->
+            <div>
+                <el-button style="margin: 10px;" type="primary" @click="back">返回</el-button>
+                <el-button style="margin: 10px;" @click="">修改标题&简介</el-button>
+                <el-button style="margin: 10px;" @click="">修改文章顺序</el-button>
+            </div>
             <el-card class="box-card" shadow="hover">
                 <template #header>
                     <div class="card-header">
@@ -56,6 +61,11 @@ const filterTableData = computed(() =>
 )
 
 const router = useRouter()
+
+function back(){
+    // console.log(router);
+    router.back()
+}
 
 const tableData = [
     {

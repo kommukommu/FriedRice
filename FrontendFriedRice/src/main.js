@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import editor from './editor'
+import preview from './preview'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import './assets/main.css'
@@ -19,5 +20,6 @@ app.provide('$globalVar', globalVar);
 app.use(ElementPlusIconsVue)
 app.use(router)
 app.use(editor)
+app.use(preview)
 
 app.mount('#app')

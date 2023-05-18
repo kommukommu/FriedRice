@@ -2,30 +2,58 @@
     <div>
         <el-space direction="vertical" fill :fill-ratio="98" class="container">
             <!-- <template class="space" /> -->
-            <el-card v-for="i in 4" :key="i" class="box-card" shadow="hover" @click="openNewProject($event, i)">
+            <el-card v-for="i in data" :key="i.id" class="box-card" shadow="hover" @click="openNewProject($event, i.id)">
                 <template #header>
                     <div class="card-header">
-                        <span>{{ '项目' + i }}</span>
+                        <span>{{  i.title }}</span>
                     </div>
                     <div class="writer">
-                        <span v-for="j in 4">{{ '作者' + j }}</span>
+                        <span>{{ '管理者:' + i.owner }}</span>
                     </div>
                 </template>
-                <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
+                <div class="text item">{{ i.desc }}</div>
             </el-card>
             <template class="space" />
         </el-space>
     </div>
 </template>
 <script setup>
-import { useRoute,useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
+
+const data = ref([
+    {
+        id: '1',
+        title: 't1',
+        desc: 'd1',
+        owner: 'o1',
+    },
+    {
+        id: '2',
+        title: 't2',
+        desc: 'd2',
+        owner: 'o1',
+    },
+    {
+        id: '3',
+        title: 't3',
+        desc: 'd3',
+        owner: 'o1',
+    },
+    {
+        id: '4',
+        title: 't4',
+        desc: 'd4',
+        owner: 'o1',
+    },
+])
 
 function openNewProject(event, i) {
     // alert(i)
     router.push({
-        name:"Project"
+        name: "Project"
     });
 }
 </script>
