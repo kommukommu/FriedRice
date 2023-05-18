@@ -5,6 +5,7 @@ import Project from '../components/Main/Project.vue'
 import Article from '../components/Main/Article.vue'
 import Userpage from "../components/Main/Userpage.vue"
 import EditArticle from "../components/Main/EditArticle.vue"
+import Review from '../components/Main/Review.vue'
 
 import SubscriptionList from "../components/Main/SubscriptionList.vue"
 import Login from "../components/Main/Login.vue"
@@ -33,6 +34,11 @@ const routes = [
         name: 'Article',
         path: '/article',
         component: Article
+    },
+    {
+        name: 'Review',
+        path: '/review',
+        component: Review
     },
     {
         name: 'SubscriptionList',
