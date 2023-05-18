@@ -67,7 +67,8 @@
               </span>
             </template>
             <el-menu-item index="2-1" @click="goUserPage">个人页面</el-menu-item>
-            <el-menu-item index="2-2" @click="logout">登出</el-menu-item>
+            <el-menu-item index="2-2" @click="goSubcription">关注列表</el-menu-item>
+            <el-menu-item index="2-3" @click="logout">登出</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-header>
@@ -103,6 +104,12 @@ function goHomePage() {
 function goUserPage() {
   router.push({
     name: "User"
+  })
+}
+
+function goSubcription() {
+  router.push({
+    name: "SubscriptionList"
   })
 }
 

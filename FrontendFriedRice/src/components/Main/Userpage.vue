@@ -8,16 +8,16 @@
                             <el-icon><Plus /></el-icon>关注
 
                         </el-menu-item>
-                        <el-menu-item index="2" @click="jump('SubscriptionList')">
+                        <!-- <el-menu-item index="2" @click="jump('SubscriptionList')">
                             <el-icon><Bell /></el-icon>关注列表
 
-                        </el-menu-item>
-                        <el-menu-item index="3" @click="jump('ProjectList')">
+                        </el-menu-item> -->
+                        <el-menu-item index="2" @click="jump('ProjectList')">
 
                             <el-icon><Files /></el-icon>项目列表
 
                         </el-menu-item>
-                        <el-menu-item index="4" @click="jump('ArticleList')">
+                        <el-menu-item index="3" @click="jump('ArticleList')">
                             <el-icon><Tickets /></el-icon>文章所属项目列表
 
                         </el-menu-item>
