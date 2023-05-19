@@ -6,6 +6,7 @@
     <el-table :data="tableData" style="width: 100%" highlight-current-row @current-change="handleCurrentChange"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
+        <el-table-column prop="id" label="id" width="100"/>
         <el-table-column prop="name" label="用户名" />
     </el-table>
 </template>
@@ -65,19 +66,19 @@ const tableData = ref([
         name: '用户1',
     },
     {
-        id: 0,
+        id: 1,
         name: '用户2',
     },
     {
-        id: 0,
+        id: 2,
         name: '用户3',
     },
     {
-        id: 0,
+        id: 3,
         name: '用户4',
     },
     {
-        id: 0,
+        id: 4,
         name: '用户5',
     },
 ])

@@ -1,18 +1,19 @@
 <template>
     <div style="margin: 50px;">
         <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="120px" label-position="top" status-icon>
-            <el-form-item label="Username" prop="name">
+            <el-form-item label="用户名" prop="name">
                 <el-input v-model="form.name" placeholder="Please input username" />
             </el-form-item>
-            <el-form-item label="Password" prop="password">
+            <el-form-item label="密码" prop="password">
                 <el-input v-model="form.password" type="password" placeholder="Please input password" show-password />
             </el-form-item>
-            <el-form-item label="Confirm Password" prop="checkpassword">
-                <el-input v-model="form.checkpassword" type="password" placeholder="Please confirm password" show-password />
+            <el-form-item label="确认密码" prop="checkpassword">
+                <el-input v-model="form.checkpassword" type="password" placeholder="Please confirm password"
+                    show-password />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="submitForm(ruleFormRef)">Sign up</el-button>
-                <el-button @click="jump('Login')">Log in</el-button>
+                <el-button type="primary" @click="submitForm(ruleFormRef)">注册</el-button>
+                <el-button @click="jump('Login')">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -47,11 +48,15 @@ const validatePass2 = (rule, value, callback) => {
 const rules = reactive({
     name: [
         { min: 3, max: 20, message: 'Length should be 3 to 20', trigger: 'blur' },
-        { required: true, message: 'Please input Activity name', trigger: 'blur' },
-        
+        { required: true, message: 'Please input Username', trigger: 'blur' },
+
     ],
-    password: [{ validator: validatePass, trigger: 'blur' }],
-    checkpassword: [{ validator: validatePass2, trigger: 'blur' }],
+    password: [
+        { required: true, message: 'Please input the password', trigger: 'blur' },
+        { validator: validatePass, trigger: 'blur' }],
+    checkpassword: [
+        { required: true, message: 'Please input the password again', trigger: 'blur' },
+        { validator: validatePass2, trigger: 'blur' }],
 })
 
 // do not use same name with ref
