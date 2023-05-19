@@ -4,10 +4,11 @@
             <!-- <template class="space" /> -->
             <div>
                 <el-button style="margin: 10px;" type="primary" @click="back">返回</el-button>
-                <el-button v-if="isOwner" style="margin: 10px;" @click="">修改标题&简介</el-button>
-                <el-button v-if="isOwner" style="margin: 10px;" @click="" :disabled="notTwoArticles">交换文章顺序</el-button>
-                <el-button v-if="isOwner" style="margin: 10px;" type="danger"
-                    @click="handleDelete">删除</el-button>
+                <el-button v-if="isOwner" style="margin: 10px;" @click="initialiseFormChange">修改标题&简介</el-button>
+                <el-button v-if="isOwner" style="margin: 10px;" @click="isCreateVisible = true">添加文章</el-button>
+                <el-button v-if="isOwner" style="margin: 10px;" @click="swapArticles"
+                    :disabled="notTwoArticles">交换文章顺序</el-button>
+                <el-button v-if="isOwner" style="margin: 10px;" type="danger" @click="handleDelete">删除</el-button>
             </div>
             <el-card class="box-card" shadow="hover">
                 <template #header>
@@ -18,14 +19,16 @@
                         <span>{{ projectData.owner }}</span>
                     </div>
                 </template>
-                <div class="text item">{{ projectData.desc }}</div>
+                <div class="text item">
+                    <div>{{ projectData.desc }}</div>
+                </div>
             </el-card>
             <el-table :data="filterTableData" style="width: 100%" highlight-current-row
                 @current-change="handleCurrentChange" @selection-change="handleSelectionChange">
                 <el-table-column v-if="isOwner" type="selection" width="55" />
                 <el-table-column label="Title" prop="date" min-width="200" />
                 <el-table-column label="Writer" prop="name" width="200" />
-                <el-table-column align="right" width="200">
+                <el-table-column align="right" width="250">
                     <template #header>
                         <el-input v-model="search" size="small" placeholder="Type to search" />
                     </template>
@@ -37,15 +40,113 @@
             </el-table>
             <template class="space" />
         </el-space>
+        <el-dialog v-model="isChangeVisible" title="修改项目" align-center>
+            <el-form :model="formChange" label-position="top">
+                <el-form-item label="项目名" :label-width="formLabelWidth">
+                    <el-input v-model="formChange.name" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="简介" :label-width="formLabelWidth">
+                    <el-input v-model="formChange.desc" type="textarea" autocomplete="off" />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="isChangeVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="changeProject">
+                        Change
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
+        <el-dialog v-model="isCreateVisible" title="添加文章" align-center>
+            <el-form :model="formCreate" label-position="top">
+                <el-form-item label="文章标题" :label-width="formLabelWidth">
+                    <el-input v-model="formCreate.title" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="写作要求" :label-width="formLabelWidth">
+                    <el-input v-model="formCreate.requirement" type="textarea" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="作者" :label-width="formLabelWidth">
+                    <el-select v-model="formCreate.writer" filterable placeholder="Please select a writer">
+                        <el-option v-for="i in writerList" :key="i.id" :label="i.name" :value="i.id" />
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="isCreateVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="createArticle">
+                        Change
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 import { Delete } from '@element-plus/icons-vue'
-import { markRaw, computed, ref } from 'vue'
+import { reactive, markRaw, computed, ref } from 'vue'
 
 const isOwner = ref(true)
+const isChangeVisible = ref(false)
+const isCreateVisible = ref(false)
+
+const formLabelWidth = 'auto'
+
+const formChange = reactive({
+    name: '',
+    desc: '',
+})
+
+function initialiseFormChange() {
+    isChangeVisible.value = true
+    formChange.name = projectData.value.name
+    formChange.desc = projectData.value.desc
+}
+
+function changeProject() {
+    console.log(formChange);
+    isChangeVisible.value = false
+}
+
+const formCreate = reactive({
+    title: '',
+    requirement: '',
+    writer: '',
+})
+
+const writerList = ref([
+    {
+        id: 0,
+        name: 'writer1',
+    },
+    {
+        id: 1,
+        name: 'writer2',
+    },
+    {
+        id: 2,
+        name: 'writer3',
+    },
+    {
+        id: 3,
+        name: 'writer4',
+    },
+])
+
+function initialiseFormCreate() {
+    isCreateVisible.value = true
+    formChange.title = ''
+    formChange.requirement = ''
+    formChange.writer = ''
+}
+
+function createArticle() {
+    console.log(formCreate);
+    isCreateVisible.value = false
+}
 
 const currentRow = ref()
 const handleCurrentChange = (val) => {
@@ -59,6 +160,10 @@ const multipleSelection = ref([])
 const handleSelectionChange = (val) => {
     multipleSelection.value = val
     console.log(multipleSelection.value, notTwoArticles.value);
+}
+
+const swapArticles = () => {
+    console.log(multipleSelection.value);
 }
 
 const notTwoArticles = computed(() => {
@@ -87,7 +192,7 @@ const projectData = ref({
     id: 0,
     name: 'projecrt',
     owner: '123456',
-    desc: 'desc',
+    desc: `descde`,
 })
 
 const tableData = ref([
@@ -172,5 +277,21 @@ function handleDelete() {
 
 .writer {
     text-align: right;
+}
+
+.el-button--text {
+    margin-right: 15px;
+}
+
+.el-select {
+    width: 300px;
+}
+
+/* .el-input {
+  width: 200px;
+} */
+
+.dialog-footer button:first-child {
+    margin-right: 10px;
 }
 </style>

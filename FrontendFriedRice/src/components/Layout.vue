@@ -35,7 +35,7 @@
           </el-dropdown>
         </div> -->
         <el-menu default-active="0" class="el-menu-demo" mode="horizontal" :ellipsis="false"
-          @select="(index)=>handleSelect(index)">
+          @select="(index) => handleSelect(index)">
           <el-menu-item @click="goHomePage" index="0">
             <el-icon style="margin-right: 8px; margin-bottom: 1px;">
               <House />
@@ -68,8 +68,11 @@
             </template>
             <el-menu-item index="2-1" @click="goUserPage">个人页面</el-menu-item>
             <el-menu-item index="2-2" @click="goSubcription">关注列表</el-menu-item>
-            <el-menu-item index="2-3" @click="logout">登出</el-menu-item>
-            <el-menu-item index="2-4" @click="login">登录</el-menu-item>
+            <el-menu-item index="2-3" @click="isVisible = true">新建项目</el-menu-item>
+            <el-divider />
+            <el-menu-item index="2-4" @click="logout">登出</el-menu-item>
+
+            <el-menu-item index="2-5" @click="login">登录</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-header>
@@ -81,18 +84,37 @@
       <!-- <div style="height: inherit;"></div>/ -->
       <el-footer class="layout-footer">FriedRice</el-footer>
     </el-container>
+    <el-dialog v-model="isVisible" title="新建项目" align-center>
+      <el-form :model="form" label-position="top">
+        <el-form-item label="项目名" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="简介" :label-width="formLabelWidth">
+          <el-input v-model="form.desc" type="textarea" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="isVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="createProject">
+            Create
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { User, Search, House } from '@element-plus/icons-vue'
-import { ref, inject } from 'vue'
+import { reactive, ref, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 // import Homepage from './Main/Homepage.vue';
 // import Project from './Main/Project.vue';
 
 const router = useRouter()
 const inputSearch = ref('')
+const isVisible = ref(false)
 
 const globalVar = inject('$globalVar')
 
@@ -134,6 +156,18 @@ function searchProject() {
 
 function handleSelect(index) {
   console.log(index);
+}
+
+const formLabelWidth = 'auto'
+
+const form = reactive({
+  name: '',
+  desc: '',
+})
+
+function createProject() {
+  console.log(form);
+  isVisible.value = false
 }
 </script>
   
@@ -229,4 +263,19 @@ function handleSelect(index) {
 /* .layout-container-demo .layout-homepage .el-button {
   display: inline-flex;
 }*/
+.el-button--text {
+  margin-right: 15px;
+}
+
+.el-select {
+  width: 300px;
+}
+
+/* .el-input {
+  width: 300px;
+} */
+
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
 </style>
