@@ -26,8 +26,8 @@
             <el-table :data="filterTableData" style="width: 100%" highlight-current-row
                 @current-change="handleCurrentChange" @selection-change="handleSelectionChange">
                 <el-table-column v-if="isOwner" type="selection" width="55" />
-                <el-table-column label="Title" prop="date" min-width="200" />
-                <el-table-column label="Writer" prop="name" width="200" />
+                <el-table-column label="Title" prop="title" min-width="200" />
+                <el-table-column label="Writer" prop="writer" width="200" />
                 <el-table-column align="right" width="250">
                     <template #header>
                         <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -151,7 +151,7 @@ function createArticle() {
 const currentRow = ref()
 const handleCurrentChange = (val) => {
     currentRow.value = val
-    console.log(currentRow.value.name);
+    console.log(currentRow.value);
     openArticle()
 }
 
@@ -177,7 +177,7 @@ const filterTableData = computed(() =>
     tableData.value.filter(
         (data) =>
             !search.value ||
-            data.name.toLowerCase().includes(search.value.toLowerCase())
+            data.writer.toLowerCase().includes(search.value.toLowerCase())
     )
 )
 
@@ -197,23 +197,23 @@ const projectData = ref({
 
 const tableData = ref([
     {
-        date: '2016-05-03',
-        name: 'Tom',
+        title: '2016-05-03',
+        writer: 'Tom',
         address: 'No. 189, Grove St, Los Angeles',
     },
     {
-        date: '2016-05-02',
-        name: 'John',
+        title: '2016-05-02',
+        writer: 'John',
         address: 'No. 189, Grove St, Los Angeles',
     },
     {
-        date: '2016-05-04',
-        name: 'Morgan',
+        title: '2016-05-04',
+        writer: 'Morgan',
         address: 'No. 189, Grove St, Los Angeles',
     },
     {
-        date: '2016-05-01',
-        name: 'Jessy',
+        title: '2016-05-01',
+        writer: 'Jessy',
         address: 'No. 189, Grove St, Los Angeles',
     },
 ])

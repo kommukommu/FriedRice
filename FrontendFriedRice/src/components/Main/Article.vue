@@ -3,7 +3,7 @@
         <!-- <template class="space" /> -->
         <div>
             <el-button style="margin: 10px;" type="primary" @click="back">返回</el-button>
-            <el-button v-if="isWriter" style="margin: 10px;" @click="jump('EditArticle')">修改正文</el-button>
+            <el-button v-if="isWriter" style="margin: 10px;" @click="initialiseChange">修改正文</el-button>
         </div>
         <el-card class="title-card" shadow="hover">
             <template #header>
@@ -22,31 +22,59 @@
                     <span>写作要求</span>
                 </div>
             </template>
-            <div class="text item">{{ requirement }}</div>
+            <!-- <div class="text item">
+                <p>{{ requirement }}</p>
+            </div> -->
+            <v-md-preview :text="articleData.requirement"></v-md-preview>
         </el-card>
         <el-card class="body-card" shadow="hover">
             <!-- <div v-for="o in 4" :key="o" class="text item">{{ '正文 ' + o }}</div> -->
             <v-md-preview :text="text"></v-md-preview>
         </el-card>
     </el-space>
+    <el-dialog v-model="isVisible" title="修改正文" align-center width="75%">
+        <v-md-editor v-model="textChange" height="400px"></v-md-editor>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="isVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="changeText">
+                    Create
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 <script setup>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+const isVisible = ref(false)
+
+const textChange = ref('')
+
+function initialiseChange() {
+    isVisible.value = true
+    textChange.value = text.value
+}
+
+function changeText() {
+    console.log(textChange.value);
+    isVisible.value = false
+}
+
 const articleData = ref({
     id: 0,
     title: '标题',
     writer: '作者',
+    requirement: `
+yaoqiu
+123
+要求
+`,
     lastChange: '2000-01-01'
 })
 
 const isWriter = ref(true)
-
-const requirement = ref(`
-yaoqiu
-要求
-`)
 
 const text = ref(`
 # 一级标题

@@ -4,19 +4,22 @@
     <el-button style="margin: 10px;" @click="back">返回</el-button>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+onMounted(()=>{
+    
+})
 
 const text = ref('')
 const router = useRouter()
 
-function back(){
+function back() {
     // console.log(router);
     router.back()
 }
 
-function submit(){
+function submit() {
     console.log(text.value);
 }
 </script>
