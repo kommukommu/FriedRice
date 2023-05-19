@@ -52,7 +52,7 @@
             <span class="dialog-footer">
                 <el-button @click="isVisible = false">Cancel</el-button>
                 <el-button type="primary" @click="changeRequirement">
-                    Create
+                    Submit
                 </el-button>
             </span>
         </template>

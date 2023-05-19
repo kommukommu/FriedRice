@@ -53,7 +53,7 @@
                 <span class="dialog-footer">
                     <el-button @click="isChangeVisible = false">Cancel</el-button>
                     <el-button type="primary" @click="changeProject">
-                        Change
+                        Submit
                     </el-button>
                 </span>
             </template>
@@ -76,7 +76,7 @@
                 <span class="dialog-footer">
                     <el-button @click="isCreateVisible = false">Cancel</el-button>
                     <el-button type="primary" @click="createArticle">
-                        Change
+                        Submit
                     </el-button>
                 </span>
             </template>
