@@ -4,8 +4,9 @@
         <div>
             <el-button style="margin: 10px;" type="primary" @click="back">返回</el-button>
             <el-button style="margin: 10px;" @click="initialiseChange">修改要求</el-button>
-            <el-switch v-model="isReleased" class="switch" active-text="使用最新版本" inactive-text="使用历史版本"
-                :loading="loadingSwitch" :before-change="beforeChange" />
+            <el-button style="margin: 10px;" @click="passArticle">通过审核</el-button>
+            <!-- <el-switch v-model="isReleased" class="switch" active-text="使用最新版本" inactive-text="使用历史版本" -->
+            <!-- :loading="loadingSwitch" :before-change="beforeChange" /> -->
         </div>
         <el-card class="title-card" shadow="hover">
             <template #header>
@@ -95,15 +96,40 @@ const isWriter = ref(true)
 
 const loadingSwitch = ref(false)
 
-const beforeChange = () => {
-    loadingSwitch.value = true
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            loadingSwitch.value = false
-            ElMessage.success('Switch success')
-            return resolve(true)
-        }, 1000)
-    })
+// const beforeChange = () => {
+//     loadingSwitch.value = true
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             loadingSwitch.value = false
+//             ElMessage.success('Switch success')
+//             return resolve(true)
+//         }, 1000)
+//     })
+// }
+
+const passArticle = ()=>{
+    ElMessageBox.confirm(
+        '确定要通过审核?',
+        '确认',
+        {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            // type: 'warning',
+            // icon: markRaw(Delete),
+        }
+    )
+        .then(() => {
+            ElMessage({
+                type: 'success',
+                message: 'review completed',
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'review canceled',
+            })
+        })
 }
 
 const text = ref(`

@@ -4,7 +4,7 @@ import Homepage from "../components/Main/Homepage.vue"
 import Project from '../components/Main/Project.vue'
 import Article from '../components/Main/Article.vue'
 import Userpage from "../components/Main/Userpage.vue"
-// import EditArticle from "../components/Main/EditArticle.vue"
+import EditArticle from "../components/Main/EditArticle.vue"
 import Review from '../components/Main/Review.vue'
 
 import SubscriptionList from "../components/Main/SubscriptionList.vue"
@@ -55,11 +55,11 @@ const routes = [
         path: '/signup',
         component: Signup
     },
-    // {
-    //     name: 'EditArticle',
-    //     path: '/editArticle',
-    //     component: EditArticle
-    // },
+    {
+        name: 'EditArticle',
+        path: '/editArticle',
+        component: EditArticle
+    },
     {
         name: 'User',
         path: '/user',
