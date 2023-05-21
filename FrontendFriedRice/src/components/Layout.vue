@@ -63,16 +63,16 @@
                 <el-icon style="margin-right: 8px;">
                   <User />
                 </el-icon>
-                Tom
+                {{ store.username }}
               </span>
             </template>
-            <el-menu-item index="2-1" @click="goUserPage">个人页面</el-menu-item>
-            <el-menu-item index="2-2" @click="goSubcription">关注列表</el-menu-item>
-            <el-menu-item index="2-3" @click="isVisible = true">新建项目</el-menu-item>
-            <el-divider />
-            <el-menu-item index="2-4" @click="logout">登出</el-menu-item>
+            <el-menu-item v-if="(store.isLogedIn)" index="2-1" @click="goUserPage">个人页面</el-menu-item>
+            <el-menu-item v-if="(store.isLogedIn)" index="2-2" @click="goSubcription">关注列表</el-menu-item>
+            <el-menu-item v-if="(store.isLogedIn)" index="2-3" @click="isVisible = true">新建项目</el-menu-item>
+            <el-divider v-if="(store.isLogedIn)" />
+            <el-menu-item v-if="(store.isLogedIn)" index="2-4" @click="logout">登出</el-menu-item>
 
-            <el-menu-item index="2-5" @click="login">登录</el-menu-item>
+            <el-menu-item v-if="!(store.isLogedIn)" index="2-5" @click="login">登录</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-header>
@@ -107,16 +107,15 @@
 
 <script setup>
 import { User, Search, House } from '@element-plus/icons-vue'
-import { reactive, ref, inject } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
+import { store } from '../store'
 // import Homepage from './Main/Homepage.vue';
 // import Project from './Main/Project.vue';
 
 const router = useRouter()
 const inputSearch = ref('')
 const isVisible = ref(false)
-
-const globalVar = inject('$globalVar')
 
 function goHomePage() {
   router.push({

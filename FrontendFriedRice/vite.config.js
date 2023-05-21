@@ -32,6 +32,15 @@ export default defineConfig({
     //   // useSource: true
     // }),
   ],
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:4030",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
   // resolve: {
   //   alias: {
   //     '@': fileURLToPath(new URL('./src', import.meta.url))

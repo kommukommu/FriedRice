@@ -12,17 +12,19 @@
                     show-password />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="submitForm(ruleFormRef)">注册</el-button>
+                <el-button type="primary" @click="submitForm(ruleFormRef)" :loading="isLoading">注册</el-button>
                 <el-button @click="jump('Login')">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 <script setup>
+import axios from 'axios';
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 
 const ruleFormRef = ref()
+const isLoading = ref(false)
 
 const validatePass = (rule, value, callback) => {
     if (value === '') {
@@ -72,11 +74,40 @@ const submitForm = (formEl) => {
     formEl.validate((valid) => {
         if (valid) {
             console.log('submit!')
+            signup()
         } else {
             console.log('error submit!')
             return false
         }
     })
+}
+
+const signup = () => {
+    isLoading.value = true
+    axios.post('/User', {
+        name: form.name,        // 参数 firstName
+        password: form.password    // 参数 lastName
+    })
+        .then(function (response) {
+            const res = response.data
+            isLoading.value = false
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            isLoading.value = false
+            console.log(error);
+        });
 }
 
 const router = useRouter()

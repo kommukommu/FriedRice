@@ -8,15 +8,19 @@
                 <el-input v-model="form.password" type="password" placeholder="Please input password" show-password />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">登录</el-button>
+                <el-button type="primary" @click="onSubmit" :loading="isLoading">登录</el-button>
                 <el-button @click="jump('Signup')">注册</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 <script setup>
-import { reactive } from 'vue'
+import axios from 'axios'
+import { store } from '../../store'
+import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
+
+const isLoading = ref(false)
 
 // do not use same name with ref
 const form = reactive({
@@ -25,6 +29,34 @@ const form = reactive({
 })
 
 const onSubmit = () => {
+    isLoading.value = true
+    axios.post('/Login', {
+        name: form.name,        // 参数 firstName
+        password: form.password    // 参数 lastName
+    })
+        .then(function (response) {
+            const res = response.data
+            isLoading.value = false
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+                store.logIn(res.id, res.name)
+                // store.isLogedIn = true
+                jump('Home')
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            isLoading.value = false
+            console.log(error);
+        });
     console.log('submit!')
 }
 
