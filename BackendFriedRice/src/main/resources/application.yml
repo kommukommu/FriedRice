@@ -16,5 +16,6 @@ server:
   servlet:
     session:
       cookie:
-        max-age: 30s
-      timeout: 30s
+        max-age: 5m
+      timeout: 5m
+  port: 4030

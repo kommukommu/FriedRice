@@ -106,6 +106,7 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { User, Search, House } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
@@ -136,9 +137,31 @@ function goSubcription() {
 }
 
 function logout() {
-  router.push({
-    name: "Home"
-  })
+    axios.get('/Logout')
+        .then(function (response) {
+            const res = response.data
+            
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+            } else {
+                ElMessage({
+                    message: res.message,
+                    // type: 'error',
+                })
+            }
+            store.logOut()
+            router.push({
+                  name: "Home"
+                })
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+  
 }
 
 function login() {

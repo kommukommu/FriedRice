@@ -97,6 +97,9 @@ const signup = () => {
                     message: res.message,
                     type: 'success',
                 })
+                store.logIn(res.id, res.name)
+                // store.isLogedIn = true
+                jump('Home')
             } else {
                 ElMessage({
                     message: res.message,

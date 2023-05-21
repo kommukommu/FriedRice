@@ -35,8 +35,9 @@ const onSubmit = () => {
         password: form.password    // 参数 lastName
     })
         .then(function (response) {
-            const res = response.data
             isLoading.value = false
+            const res = response.data
+            
             console.log(response);
             if (res.code == 0) {
                 ElMessage({

@@ -44,17 +44,22 @@ public class UserController {
 
         if (!validatePassword(user.getPassword())) {
             map.put("code", -2);
-            map.put("desc", "密码只能包含英文字母、数字、“_”");
+            map.put("message", "密码只能包含英文字母、数字、“_”");
         } else if (userService.count(queryWrapper) != 0) {
             map.put("code", -1);
-            map.put("desc", "用户名已存在");
+            map.put("message", "用户名已存在");
         } else if (userService.save(user)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("name", user.getName());
+            session.setAttribute("id", user.getId());
+
             map.put("code", 0);
-            map.put("desc", "注册成功");
+            map.put("message", "注册成功");
             map.put("id", user.getId());
+            map.put("name", user.getName());
         } else {
             map.put("code", -100);
-            map.put("desc", "未知原因失败");
+            map.put("message", "未知原因失败");
         }
 
         return map;
@@ -66,7 +71,7 @@ public class UserController {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name", user.getName())
                 .eq("password", user.getPassword());
-        if (userService.count(queryWrapper) != 0){
+        if (userService.count(queryWrapper) != 0) {
             User userGet = userService.getOne(queryWrapper);
             HttpSession session = request.getSession();
             session.setAttribute("name", userGet.getName());
@@ -74,12 +79,32 @@ public class UserController {
 
             map.put("code", 0);
             map.put("id", userGet.getId());
-            map.put("desc", "登录成功");
+            map.put("name", userGet.getName());
+            map.put("message", "登录成功");
         } else {
             map.put("code", -1);
-            map.put("desc", "用户名或密码有误");
+            map.put("message", "用户名或密码有误");
         }
 
+        return map;
+    }
+
+    @GetMapping("/Logout")
+    public Map<String, Object> logout() {
+        Map<String, Object> map = new HashMap<>();
+        HttpSession session;
+        session = request.getSession(false);
+        if (session == null) {
+            map.put("code", 1);
+            map.put("message", "用户已登出");
+        } else {
+            map.put("code", 0);
+            map.put("id", session.getAttribute("id"));
+            map.put("name", session.getAttribute("name"));
+
+            session.invalidate();
+            map.put("message", "登出成功");
+        }
         return map;
     }
 
