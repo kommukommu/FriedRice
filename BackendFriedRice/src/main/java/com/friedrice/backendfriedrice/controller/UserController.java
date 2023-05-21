@@ -1,32 +1,30 @@
 package com.friedrice.backendfriedrice.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.friedrice.backendfriedrice.pojo.Subscription;
 import com.friedrice.backendfriedrice.pojo.User;
+import com.friedrice.backendfriedrice.service.SubscriptionService;
 import com.friedrice.backendfriedrice.service.UserService;
+import com.friedrice.backendfriedrice.utility.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 @RestController
 public class UserController {
     private final UserService userService;
+    private final SubscriptionService subscriptionService;
     private final HttpServletRequest request;
+    private final Utils utils;
 
-    public UserController(UserService userService, HttpServletRequest request) {
+    public UserController(UserService userService, SubscriptionService subscriptionService, HttpServletRequest request, Utils utils) {
         this.userService = userService;
+        this.subscriptionService = subscriptionService;
         this.request = request;
-    }
-
-    private Boolean validatePassword(String str) {
-
-        Pattern pattern = Pattern.compile("^[A-Z|a-z|\\d|_]*$");
-        Boolean result = pattern.matcher(str).matches();
-        System.out.println(str + result);
-        return result;
+        this.utils = utils;
     }
 
     @GetMapping("/User/{id}")
@@ -42,7 +40,7 @@ public class UserController {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name", user.getName());
 
-        if (!validatePassword(user.getPassword())) {
+        if (!(utils.validatePassword(user.getPassword()))) {
             map.put("code", -2);
             map.put("message", "密码只能包含英文字母、数字、“_”");
         } else if (userService.count(queryWrapper) != 0) {
@@ -62,6 +60,22 @@ public class UserController {
             map.put("message", "未知原因失败");
         }
 
+        return map;
+    }
+
+    @GetMapping("/Login")
+    public Map<String, Object> isOnline() {
+        Map<String, Object> map = new HashMap<>();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            map.put("code", -1);
+            map.put("message", "请先登录");
+            return map;
+        }
+        map.put("code", 0);
+        map.put("id", session.getAttribute("id"));
+        map.put("name", session.getAttribute("name"));
+        map.put("message", "已登录");
         return map;
     }
 
@@ -92,8 +106,7 @@ public class UserController {
     @GetMapping("/Logout")
     public Map<String, Object> logout() {
         Map<String, Object> map = new HashMap<>();
-        HttpSession session;
-        session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session == null) {
             map.put("code", 1);
             map.put("message", "用户已登出");
@@ -105,6 +118,34 @@ public class UserController {
             session.invalidate();
             map.put("message", "登出成功");
         }
+        return map;
+    }
+
+    @PostMapping("/Subscription")
+    public Map<String, Object> subscribe(@RequestBody Subscription subscription) {
+        Map<String, Object> map = new HashMap<>();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            map.put("code", -1);
+            map.put("message", "请先登录");
+            return map;
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", subscription.getSubscribed());
+        if (userService.count(queryWrapper) < 1) {
+            map.put("code", -2);
+            map.put("message", "被关注者不存在");
+            return map;
+        }
+        Integer subscriber = Integer.parseInt(session.getAttribute("id").toString());
+        subscription.setSubscriber(subscriber);
+        if (subscriptionService.save(subscription)) {
+            map.put("code", 0);
+            map.put("message", "关注成功");
+            return map;
+        }
+        map.put("code", -100);
+        map.put("message", "未知原因失败");
         return map;
     }
 

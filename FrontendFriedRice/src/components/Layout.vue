@@ -66,13 +66,13 @@
                 {{ store.username }}
               </span>
             </template>
-            <el-menu-item v-if="(store.isLogedIn)" index="2-1" @click="goUserPage">个人页面</el-menu-item>
-            <el-menu-item v-if="(store.isLogedIn)" index="2-2" @click="goSubcription">关注列表</el-menu-item>
-            <el-menu-item v-if="(store.isLogedIn)" index="2-3" @click="isVisible = true">新建项目</el-menu-item>
-            <el-divider v-if="(store.isLogedIn)" />
-            <el-menu-item v-if="(store.isLogedIn)" index="2-4" @click="logout">登出</el-menu-item>
+            <el-menu-item v-if="(store.isOnline)" index="2-1" @click="goUserPage">个人页面</el-menu-item>
+            <el-menu-item v-if="(store.isOnline)" index="2-2" @click="goSubcription">关注列表</el-menu-item>
+            <el-menu-item v-if="(store.isOnline)" index="2-3" @click="isVisible = true">新建项目</el-menu-item>
+            <el-divider v-if="(store.isOnline)" />
+            <el-menu-item v-if="(store.isOnline)" index="2-4" @click="logout">登出</el-menu-item>
 
-            <el-menu-item v-if="!(store.isLogedIn)" index="2-5" @click="login">登录</el-menu-item>
+            <el-menu-item v-if="!(store.isOnline)" index="2-5" @click="login">登录</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-header>
@@ -137,31 +137,31 @@ function goSubcription() {
 }
 
 function logout() {
-    axios.get('/Logout')
-        .then(function (response) {
-            const res = response.data
-            
-            console.log(response);
-            if (res.code == 0) {
-                ElMessage({
-                    message: res.message,
-                    type: 'success',
-                })
-            } else {
-                ElMessage({
-                    message: res.message,
-                    // type: 'error',
-                })
-            }
-            store.logOut()
-            router.push({
-                  name: "Home"
-                })
+  axios.get('/Logout')
+    .then(function (response) {
+      const res = response.data
+
+      console.log(response);
+      if (res.code == 0) {
+        ElMessage({
+          message: res.message,
+          type: 'success',
         })
-        .catch(function (error) {
-            console.log(error);
-        });
-  
+      } else {
+        ElMessage({
+          message: res.message,
+          // type: 'error',
+        })
+      }
+      store.logOut()
+      router.push({
+        name: "Home"
+      })
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
 }
 
 function login() {
