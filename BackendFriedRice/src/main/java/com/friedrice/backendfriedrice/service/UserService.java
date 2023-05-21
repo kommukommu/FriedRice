@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package com.friedrice.backendfriedrice.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.demo.pojo.User;
+import com.friedrice.backendfriedrice.pojo.User;
 
 public interface UserService extends IService<User> {
 }

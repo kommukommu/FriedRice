@@ -1,2 +1,10 @@
-package com.friedrice.backendfriedrice.pojo;public class User {
+package com.friedrice.backendfriedrice.pojo;
+
+import lombok.Data;
+
+@Data
+public class User {
+    private Integer id;
+    private String name;
+    private String password;
 }

@@ -1,9 +1,9 @@
-package com.example.demo.service.impl;
+package com.friedrice.backendfriedrice.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.demo.mapper.UserMapper;
-import com.example.demo.pojo.User;
-import com.example.demo.service.UserService;
+import com.friedrice.backendfriedrice.mapper.UserMapper;
+import com.friedrice.backendfriedrice.pojo.User;
+import com.friedrice.backendfriedrice.service.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
