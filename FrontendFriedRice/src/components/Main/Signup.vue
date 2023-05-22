@@ -85,8 +85,8 @@ const submitForm = (formEl) => {
 const signup = () => {
     isLoading.value = true
     axios.post('/User', {
-        name: form.name,        // 参数 firstName
-        password: form.password    // 参数 lastName
+        name: form.name,
+        password: form.password
     })
         .then(function (response) {
             const res = response.data

@@ -62,8 +62,9 @@ const routes = [
     },
     {
         name: 'User',
-        path: '/user',
+        path: '/user/:id',
         component: Userpage,
+        // props: true,
         redirect: {
             name: 'ProjectList'
         },

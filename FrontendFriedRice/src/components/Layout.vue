@@ -126,7 +126,10 @@ function goHomePage() {
 
 function goUserPage() {
   router.push({
-    name: "User"
+    name: "User",
+    params: {
+      id: store.userId,
+    }
   })
 }
 

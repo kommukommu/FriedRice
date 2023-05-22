@@ -4,7 +4,7 @@
             <el-aside width="200px">
                 <el-scrollbar>
                     <el-menu>
-                        <el-menu-item index="1">
+                        <el-menu-item index="1" @click="subscribe()">
                             <el-icon>
                                 <Plus />
                             </el-icon>关注
@@ -47,12 +47,69 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { reactive, onMounted, onUpdated } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import { Plus, Bell, Files, Tickets } from '@element-plus/icons-vue'
-import { toNumber } from '@vue/shared';
+import { Plus, Files, Tickets } from '@element-plus/icons-vue'
+import axios from 'axios';
 
 const router = useRouter()
+const route = useRoute()
+
+onMounted(() => {
+    getUser()
+})
+
+onUpdated(() => {
+    getUser()
+})
+
+function getUser(){
+    // console.log(route)
+    axios.get('/User/' + route.params.id)
+        .then(function (response) {
+            console.log(response);
+            const res = response.data
+
+            if (res.code == 0) {
+                userData.name = res.name
+                userData.id = res.id
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+}
+
+function subscribe() {
+    axios.post('/Subscription', {
+        subscribed: userData.id
+    })
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    console.log('subscribe!')
+}
 
 function jump(name) {
     console.log(router);
@@ -61,8 +118,8 @@ function jump(name) {
     })
 }
 
-const userData = ref({
-    id: 0,
+const userData = reactive({
+    id: route.params.id,
     name: 'Tom',
 })
 </script>

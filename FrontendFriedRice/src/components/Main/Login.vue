@@ -31,8 +31,8 @@ const form = reactive({
 const onSubmit = () => {
     isLoading.value = true
     axios.post('/Login', {
-        name: form.name,        // 参数 firstName
-        password: form.password    // 参数 lastName
+        name: form.name,
+        password: form.password
     })
         .then(function (response) {
             isLoading.value = false

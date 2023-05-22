@@ -11,5 +11,4 @@ public class BackendFriedRiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BackendFriedRiceApplication.class, args);
 	}
-
 }
