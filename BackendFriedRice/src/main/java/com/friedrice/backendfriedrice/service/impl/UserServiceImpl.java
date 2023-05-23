@@ -1,6 +1,7 @@
 package com.friedrice.backendfriedrice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.friedrice.backendfriedrice.mapper.UserMapper;
 import com.friedrice.backendfriedrice.pojo.User;
@@ -20,6 +21,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .eq(user.getName() != null, User::getName, user.getName())
                 .eq(user.getPassword() != null, User::getPassword, user.getPassword());
         return this.getOne(queryWrapper);
+    }
+
+    @Override
+    public List<Map<String, Object>> getUserMapsByNameLike(String name) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotBlank(name), User::getName, name)
+                .select(User::getId, User::getName);
+        return this.listMaps(queryWrapper);
     }
 
     @Override

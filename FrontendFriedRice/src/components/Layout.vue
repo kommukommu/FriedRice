@@ -119,6 +119,7 @@ const inputSearch = ref('')
 const isVisible = ref(false)
 
 function goHomePage() {
+  store.stopSearchByConditions()
   router.push({
     name: "Home"
   })
@@ -174,9 +175,19 @@ function login() {
 }
 
 function searchProject() {
-  router.push({
-    name: "Home"
-  })
+  console.log(inputSearch.value);
+  if (inputSearch.value == "") {
+    goHomePage()
+  }
+  else {
+    store.startSearchByConditions()
+    router.push({
+      name: "SearchProject",
+      params: {
+        name: inputSearch.value
+      }
+    })
+  }
 }
 
 function handleSelect(index) {

@@ -26,6 +26,11 @@ const routes = [
         component: Homepage
     },
     {
+        name: 'SearchProject',
+        path: '/SearchProject/:name',
+        component: Homepage
+    },
+    {
         name: 'Project',
         path: '/project',
         component: Project

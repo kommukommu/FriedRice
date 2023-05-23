@@ -18,5 +18,12 @@ export const store = reactive({
         console.log(this.isOnline, this.userId, this.username);
         cookies.remove('JSESSIONID')
     },
-
+    isSearchByConditions: false,
+    startSearchByConditions() {
+        this.isSearchByConditions = true
+    },
+    stopSearchByConditions() {
+        this.isSearchByConditions = false
+    },
+    searchingConditions: "搜索项目名称",
 })

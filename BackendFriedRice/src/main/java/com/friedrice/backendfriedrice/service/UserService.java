@@ -8,6 +8,10 @@ import java.util.Map;
 
 public interface UserService extends IService<User> {
     public User getUser(User user);
+
+    public List<Map<String, Object>> getUserMapsByNameLike(String name);
+
     public List<Map<String, Object>> getUserMapsByID(List<Integer> ids);
+
     public Long countUsers(User user);
 }
