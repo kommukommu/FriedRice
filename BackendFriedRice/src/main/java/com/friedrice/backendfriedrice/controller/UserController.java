@@ -1,6 +1,5 @@
 package com.friedrice.backendfriedrice.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.friedrice.backendfriedrice.pojo.Subscription;
 import com.friedrice.backendfriedrice.pojo.User;
 import com.friedrice.backendfriedrice.service.SubscriptionService;
@@ -35,10 +34,10 @@ public class UserController {
 
     @GetMapping("/User/{id}")
     public Map<String, Object> getUser(@PathVariable("id") Integer id) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
+        User user = new User();
+        user.setId(id);
         Map<String, Object> map = new HashMap<>();
-        User user = userService.getOne(queryWrapper);
+        user = userService.getUser(user);
         if (user == null) {
             map.put("code", -1);
             map.put("message", "用户不存在");
@@ -54,13 +53,12 @@ public class UserController {
     @PostMapping("/User")
     public Map<String, Object> saveUser(@RequestBody User user) {
         Map<String, Object> map = new HashMap<>();
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name", user.getName());
-
-        if (Boolean.FALSE.equals((utils.validatePassword(user.getPassword())))) {
+        User userName = new User();
+        userName.setName(user.getName());
+        if (Boolean.FALSE.equals(utils.validatePassword(user.getPassword()))) {
             map.put("code", -2);
             map.put("message", "密码只能包含英文字母、数字、“_”");
-        } else if (userService.count(queryWrapper) != 0) {
+        } else if (userService.countUsers(userName) != 0) {
             map.put("code", -1);
             map.put("message", "用户名已存在");
         } else if (userService.save(user)) {
@@ -99,11 +97,8 @@ public class UserController {
     @PostMapping("/Login")
     public Map<String, Object> login(@RequestBody User user) {
         Map<String, Object> map = new HashMap<>();
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name", user.getName())
-                .eq("password", user.getPassword());
-        if (userService.count(queryWrapper) != 0) {
-            User userGet = userService.getOne(queryWrapper);
+        if (userService.countUsers(user) != 0) {
+            User userGet = userService.getUser(user);
             HttpSession session = request.getSession();
             session.setAttribute("name", userGet.getName());
             session.setAttribute("id", userGet.getId());
@@ -147,13 +142,12 @@ public class UserController {
             map.put("message", "请先登录");
             return map;
         }
-        Integer subscriber = Integer.parseInt(session.getAttribute("id").toString());
-        QueryWrapper<Subscription> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("subscriber", subscriber);
-        List<Subscription> subscriptionList = subscriptionService.list(queryWrapper);
-        logger.info("subscriptionList->", subscriptionList.toString());
-        if (subscriptionList.isEmpty()){
-            List<User> userList = new ArrayList<>();
+        Subscription subscription = new Subscription();
+        subscription.setSubscriber(Integer.parseInt(session.getAttribute("id").toString()));
+        List<Subscription> subscriptionList = subscriptionService.getSubscriptions(subscription);
+        logger.info("subscriptionList->%s".formatted(subscriptionList.toString()));
+        if (subscriptionList.isEmpty()) {
+            List<Map<String, Object>> userList = new ArrayList<>();
             map.put("code", 0);
             map.put("message", "关注列表查询成功");
             map.put("list", userList);
@@ -162,12 +156,9 @@ public class UserController {
 
         List<Integer> idList = new ArrayList<>();
         subscriptionList.forEach(item -> idList.add(item.getSubscribed()));
-        logger.info("subscriptionList->", idList);
-        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.in("id", idList);
-        userQueryWrapper.select("id", "name");
-        List<User> userList = userService.list(userQueryWrapper);
-        logger.info("subscriptionList->", userList.toString());
+        logger.info("subscriptionList->%s".formatted(idList));
+        List<Map<String, Object>> userList = userService.getUserMapsByID(idList);
+        logger.info("subscriptionList->%s".formatted(userList.toString()));
         map.put("code", 0);
         map.put("message", "关注列表查询成功");
         map.put("list", userList);
@@ -190,23 +181,19 @@ public class UserController {
             map.put("message", "不能关注自己");
             return map;
         }
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", subscribed);
-        if (userService.count(queryWrapper) < 1) {
+        User userID = new User();
+        userID.setId(subscribed);
+        if (userService.countUsers(userID) < 1) {
             map.put("code", -3);
             map.put("message", "被关注者不存在");
             return map;
         }
-
-        QueryWrapper<Subscription> subscriptionQueryWrapper = new QueryWrapper<>();
-        subscriptionQueryWrapper.eq("subscriber", subscriber);
-        subscriptionQueryWrapper.eq("subscribed", subscribed);
-        if (subscriptionService.count(subscriptionQueryWrapper) != 0) {
+        subscription.setSubscriber(subscriber);
+        if (subscriptionService.countSubscriptions(subscription) != 0) {
             map.put("code", -4);
             map.put("message", "已关注此用户");
             return map;
         }
-        subscription.setSubscriber(subscriber);
         if (subscriptionService.save(subscription)) {
             map.put("code", 0);
             map.put("message", "关注成功");
@@ -219,7 +206,6 @@ public class UserController {
 
     @DeleteMapping("/Subscription")
     public Map<String, Object> removeSubscriptions(@RequestBody List<Integer> idList) {
-//        logger.info(idList.toString());
         Map<String, Object> map = new HashMap<>();
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -227,15 +213,13 @@ public class UserController {
             map.put("message", "请先登录");
             return map;
         }
-        if (idList.isEmpty()){
+        if (idList.isEmpty()) {
             map.put("code", 0);
             map.put("message", "取消关注成功");
             return map;
         }
-        QueryWrapper<Subscription> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("subscriber", session.getAttribute("id"));
-        queryWrapper.in("subscribed", idList);
-        if (subscriptionService.remove(queryWrapper)) {
+        if (subscriptionService.removeSubscriptions((Integer) session.getAttribute("id"),
+                idList)) {
             map.put("code", 0);
             map.put("message", "取消关注成功");
             return map;
