@@ -23,21 +23,23 @@
                     <div>{{ projectData.desc }}</div>
                 </div>
             </el-card>
-            <el-table :data="filterTableData" style="width: 100%" highlight-current-row
-                @current-change="handleCurrentChange" @selection-change="handleSelectionChange">
-                <el-table-column v-if="isOwner" type="selection" width="55" />
-                <el-table-column label="Title" prop="title" min-width="200" />
-                <el-table-column label="Writer" prop="writer" width="200" />
-                <el-table-column align="right" width="250">
-                    <template #header>
-                        <el-input v-model="search" size="small" placeholder="Type to search" />
-                    </template>
-                    <template v-if="isOwner" #default="scope">
-                        <el-button size="small" @click="handleReview(scope.$index, scope.row)">审核</el-button>
-                        <!-- <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
-                    </template>
-                </el-table-column>
-            </el-table>
+            <div style="position: absolute; width: 100%;">
+                <el-table :data="filterTableData" highlight-current-row @current-change="handleCurrentChange"
+                    @selection-change="handleSelectionChange">
+                    <el-table-column v-if="isOwner" type="selection" width="55" />
+                    <el-table-column label="Title" prop="title" min-width="200" />
+                    <el-table-column label="Writer" prop="writer" width="200" />
+                    <el-table-column align="right" width="250">
+                        <template #header>
+                            <el-input v-model="search" size="small" placeholder="Type to search" />
+                        </template>
+                        <template v-if="isOwner" #default="scope">
+                            <el-button size="small" @click="handleReview(scope.$index, scope.row)">审核</el-button>
+                            <!-- <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <template class="space" />
         </el-space>
         <el-dialog v-model="isChangeVisible" title="修改项目" align-center>
@@ -87,11 +89,15 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 import { Delete } from '@element-plus/icons-vue'
-import { reactive, markRaw, computed, ref } from 'vue'
+import { reactive, markRaw, computed, ref, onMounted } from 'vue'
 
 const isOwner = ref(true)
 const isChangeVisible = ref(false)
 const isCreateVisible = ref(false)
+
+onMounted(() => {
+
+})
 
 const formLabelWidth = 'auto'
 
