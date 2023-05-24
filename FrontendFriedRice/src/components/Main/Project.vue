@@ -5,7 +5,7 @@
             <div>
                 <el-button style="margin: 10px;" type="primary" @click="back">返回</el-button>
                 <el-button v-if="isOwner" style="margin: 10px;" @click="initialiseFormChange">修改标题&简介</el-button>
-                <el-button v-if="isOwner" style="margin: 10px;" @click="isCreateVisible = true">添加文章</el-button>
+                <el-button v-if="isOwner" style="margin: 10px;" @click="initialiseFormCreate">添加文章</el-button>
                 <el-button v-if="isOwner" style="margin: 10px;" @click="swapArticles"
                     :disabled="notTwoArticles">交换文章顺序</el-button>
                 <el-button v-if="isOwner" style="margin: 10px;" type="danger" @click="handleDelete">删除所选文章</el-button>
@@ -104,11 +104,13 @@ const isOwner = computed(() => projectData.owner === store.userId)
 onMounted(() => {
     projectData.id = route.params.projectID
     getProjectData()
+    getTableData()
 })
 
 onUpdated(() => {
     projectData.id = route.params.projectID
     getProjectData()
+    getTableData()
 })
 
 function getProjectData() {
@@ -127,6 +129,30 @@ function getProjectData() {
                 projectData.desc = res.project.description
                 projectData.owner = res.project.owner
                 projectData.ownerName = res.project.ownerName
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function getTableData() {
+    axios.get('/Article/Project/' + projectData.id)
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                // ElMessage({
+                //     message: res.message,
+                //     type: 'success',
+                // })
+                tableData.value = res.articles
             } else {
                 ElMessage({
                     message: res.message,
@@ -212,14 +238,66 @@ const writerList = ref([
 
 function initialiseFormCreate() {
     isCreateVisible.value = true
-    formChange.title = ''
-    formChange.requirement = ''
-    formChange.writer = ''
+    formCreate.title = ''
+    formCreate.requirement = ''
+    formCreate.writer = ''
+    getWriterList()
+}
+
+function getWriterList() {
+    axios.get('/WriterList')
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                // ElMessage({
+                //     message: res.message,
+                //     type: 'success',
+                // })
+                writerList.value = res.list
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 function createArticle() {
     console.log(formCreate);
-    isCreateVisible.value = false
+    axios.post('/Article', {
+        title: formCreate.title,
+        requirement: formCreate.requirement,
+        writer: formCreate.writer,
+        project: projectData.id,
+    })
+        .then(function (response) {
+            const res = response.data
+            isCreateVisible.value = false
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+                isCreateVisible.value = false
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            isCreateVisible.value = false
+            console.log(error);
+        });
+
 }
 
 const currentRow = ref()
@@ -238,6 +316,27 @@ const handleSelectionChange = (val) => {
 
 const swapArticles = () => {
     console.log(multipleSelection.value);
+    axios.post('/Article/Swap', multipleSelection.value.map(x => x.id))
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+                getTableData()
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 const notTwoArticles = computed(() => {
@@ -251,7 +350,7 @@ const filterTableData = computed(() =>
     tableData.value.filter(
         (data) =>
             !search.value ||
-            data.writer.toLowerCase().includes(search.value.toLowerCase())
+            data.title.toLowerCase().includes(search.value.toLowerCase())
     )
 )
 
@@ -273,19 +372,19 @@ const projectData = reactive({
 const tableData = ref([
     {
         title: '2016-05-03',
-        writer: 'Tom',
+        writerName: 'Tom',
     },
     {
         title: '2016-05-02',
-        writer: 'John',
+        writerName: 'John',
     },
     {
         title: '2016-05-04',
-        writer: 'Morgan',
+        writerName: 'Morgan',
     },
     {
         title: '2016-05-01',
-        writer: 'Jessy',
+        writerName: 'Jessy',
     },
 ])
 
@@ -316,10 +415,11 @@ function handleDelete() {
         }
     )
         .then(() => {
-            ElMessage({
-                type: 'success',
-                message: 'Delete completed',
-            })
+            deleteArticles()
+            // ElMessage({
+            //     type: 'success',
+            //     message: 'Delete completed',
+            // })
         })
         .catch(() => {
             ElMessage({
@@ -327,6 +427,32 @@ function handleDelete() {
                 message: 'Delete canceled',
             })
         })
+}
+
+function deleteArticles() {
+    axios.delete('/Article', {
+        data: multipleSelection.value.map(x => x.id)
+    })
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+                getTableData()
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 function openUserpage() {

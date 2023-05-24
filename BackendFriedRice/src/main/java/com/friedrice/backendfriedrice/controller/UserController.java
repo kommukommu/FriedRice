@@ -133,6 +133,38 @@ public class UserController {
         return map;
     }
 
+    public List<Map<String, Object>> getUserList(HttpSession session, boolean isSelf) {
+        Subscription subscription = new Subscription();
+        subscription.setSubscriber(Integer.parseInt(session.getAttribute("id").toString()));
+        List<Subscription> subscriptionList = subscriptionService.getSubscriptions(subscription);
+        logger.info("subscriptionList->%s".formatted(subscriptionList.toString()));
+        if (subscriptionList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Integer> idList = new ArrayList<>();
+        if (isSelf) idList.add(subscription.getSubscriber());
+        subscriptionList.forEach(item -> idList.add(item.getSubscribed()));
+        logger.info("subscriptionList->%s".formatted(idList));
+        List<Map<String, Object>> userList = userService.getUserMapsByID(idList);
+        logger.info("subscriptionList->%s".formatted(userList.toString()));
+        return userList;
+    }
+
+    @GetMapping("/WriterList")
+    public Map<String, Object> getWriterList() {
+        Map<String, Object> map = new HashMap<>();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            map.put("code", -1);
+            map.put("message", "请先登录");
+            return map;
+        }
+        map.put("code", 0);
+        map.put("message", "关注列表查询成功");
+        map.put("list", getUserList(session, true));
+        return map;
+    }
+
     @GetMapping("/Subscription")
     public Map<String, Object> getSubscription() {
         Map<String, Object> map = new HashMap<>();
@@ -142,26 +174,9 @@ public class UserController {
             map.put("message", "请先登录");
             return map;
         }
-        Subscription subscription = new Subscription();
-        subscription.setSubscriber(Integer.parseInt(session.getAttribute("id").toString()));
-        List<Subscription> subscriptionList = subscriptionService.getSubscriptions(subscription);
-        logger.info("subscriptionList->%s".formatted(subscriptionList.toString()));
-        if (subscriptionList.isEmpty()) {
-            List<Map<String, Object>> userList = new ArrayList<>();
-            map.put("code", 0);
-            map.put("message", "关注列表查询成功");
-            map.put("list", userList);
-            return map;
-        }
-
-        List<Integer> idList = new ArrayList<>();
-        subscriptionList.forEach(item -> idList.add(item.getSubscribed()));
-        logger.info("subscriptionList->%s".formatted(idList));
-        List<Map<String, Object>> userList = userService.getUserMapsByID(idList);
-        logger.info("subscriptionList->%s".formatted(userList.toString()));
         map.put("code", 0);
         map.put("message", "关注列表查询成功");
-        map.put("list", userList);
+        map.put("list", getUserList(session, false));
         return map;
     }
 

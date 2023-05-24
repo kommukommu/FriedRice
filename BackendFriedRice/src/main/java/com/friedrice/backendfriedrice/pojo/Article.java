@@ -12,6 +12,6 @@ public class Article {
     private Integer writer;
     private Short state;
     private String requirement;
-    private Integer order;
+    private Integer orderNumber;
     private Date lastChange;
 }

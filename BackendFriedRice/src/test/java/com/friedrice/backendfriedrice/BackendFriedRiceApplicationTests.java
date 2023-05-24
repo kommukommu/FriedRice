@@ -1,8 +1,11 @@
 package com.friedrice.backendfriedrice;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.friedrice.backendfriedrice.mapper.ArticleMapper;
+import com.friedrice.backendfriedrice.mapper.BodyMapper;
 import com.friedrice.backendfriedrice.mapper.ProjectMapper;
 import com.friedrice.backendfriedrice.mapper.UserMapper;
+import com.friedrice.backendfriedrice.pojo.Article;
 import com.friedrice.backendfriedrice.pojo.Project;
 import com.friedrice.backendfriedrice.pojo.User;
 import com.friedrice.backendfriedrice.service.UserService;
@@ -19,6 +22,10 @@ class BackendFriedRiceApplicationTests {
     UserService userService;
     @Autowired
     ProjectMapper projectMapper;
+    @Autowired
+    ArticleMapper articleMapper;
+    @Autowired
+    BodyMapper bodyMapper;
 
     @Test
     void contextLoads() {
@@ -31,7 +38,7 @@ class BackendFriedRiceApplicationTests {
 //        user.setName("user1");
 //        user.setPassword("pass");
 //        int result = userMapper.insert(user);
-        Project result = projectMapper.selectById(2);
+        Article result = articleMapper.selectById(2);
         System.out.println("===" + result);
     }
 
