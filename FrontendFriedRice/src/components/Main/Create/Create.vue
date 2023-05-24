@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <el-dialog v-model="dialogFormVisible" title="Shipping address">
         <el-form :model="form">
             <el-form-item label="Promotion name" :label-width="formLabelWidth">
@@ -58,4 +58,4 @@ const form = reactive({
 .dialog-footer button:first-child {
     margin-right: 10px;
 }
-</style>
+</style> -->

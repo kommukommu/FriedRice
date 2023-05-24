@@ -48,9 +48,9 @@ public class ArticleController {
         map.put("writer", article.getWriter());
         map.put("writerName", userService.getUserNameByID(article.getWriter()));
         map.put("orderNumber", article.getOrderNumber());
-        map.put("lastChange", article.getLastChange());
+        map.put("lastChange", article.getLastChange().toString());
         if (isOwnerOrWriter) {
-            map.put("requirement", article.getRequirement());
+            map.put("requirement", (null == article.getRequirement()) ? "" : article.getRequirement());
         }
         return map;
     }
@@ -61,8 +61,25 @@ public class ArticleController {
 
         List<Article> articles = articleService.getArticlesByProject(projectID);
         map.put("code", 0);
-        map.put("message", "项目查询成功");
+        map.put("message", "文章查询成功");
         map.put("articles", createArticleMap(articles));
+        return map;
+    }
+
+    @GetMapping("/Article/ID/{id}")
+    public Map<String, Object> getArticle(@PathVariable("id") Integer aritcleID) {
+        Map<String, Object> map = new HashMap<>();
+        boolean isWriter = false;
+        Article article = articleService.getById(aritcleID);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Integer userID = Integer.parseInt(session.getAttribute("id").toString());
+            if (Objects.equals(article.getWriter(), userID)) isWriter = true;
+        }
+
+        map.put("code", 0);
+        map.put("message", "文章查询成功");
+        map.put("article", createArticleMap(article, isWriter));
         return map;
     }
 
@@ -75,10 +92,15 @@ public class ArticleController {
             map.put("message", "请先登录");
             return map;
         }
+        if (null == article.getWriter()) {
+            map.put("code", -2);
+            map.put("message", "文章未指定作者java");
+            return map;
+        }
         Project project = projectService.getById(article.getProject());
         Integer userID = Integer.parseInt(session.getAttribute("id").toString());
         if (!Objects.equals(project.getOwner(), userID)) {
-            map.put("code", -2);
+            map.put("code", -3);
             map.put("message", "无法在非项目管理员的情况下创建文章");
             return map;
         }

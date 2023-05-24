@@ -1,5 +1,5 @@
 <template>
-    <el-space direction="vertical" fill :fill-ratio="98" class="container">
+    <el-space v-if="isWriter" direction="vertical" fill :fill-ratio="98" class="container">
         <!-- <template class="space" /> -->
         <div>
             <el-button style="margin: 10px;" type="primary" @click="back">返回</el-button>
@@ -46,14 +46,53 @@
     </el-space>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
 
 // const isVisible = ref(false)
+const route = useRoute()
 
-onMounted(()=>{
+onMounted(() => {
     textChange.value = text.value
+    articleData.id = route.params.articleID
+    getArticleData()
 })
+
+function getArticleData() {
+    axios.get('/Article/ID/' + articleData.id)
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                // ElMessage({
+                //     message: res.message,
+                //     type: 'success',
+                // })
+                articleData.id = res.article.id
+                articleData.title = res.article.title
+                articleData.writerName = res.article.writerName
+                articleData.lastChange = res.article.lastChange
+                if ('requirement' in res.article) {
+                    isWriter.value = true
+                    articleData.requirement = res.article.requirement
+
+                } else {
+                    isWriter.value = false
+                }
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+}
 
 const textChange = ref('')
 
@@ -61,7 +100,7 @@ function changeText() {
     console.log(textChange.value);
 }
 
-const articleData = ref({
+const articleData = reactive({
     id: 0,
     title: '标题',
     writer: '作者',
@@ -73,7 +112,7 @@ yaoqiu
     lastChange: '2000-01-01'
 })
 
-const isWriter = ref(true)
+const isWriter = ref(false)
 
 const text = ref(`
 # 一级标题

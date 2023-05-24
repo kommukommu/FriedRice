@@ -391,7 +391,10 @@ const tableData = ref([
 function openArticle() {
     // alert(i)
     router.push({
-        name: "Article"
+        name: "Article",
+        params: {
+            articleID: currentRow.value.id
+        }
     });
 }
 

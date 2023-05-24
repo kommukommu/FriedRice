@@ -37,7 +37,7 @@ const routes = [
     },
     {
         name: 'Article',
-        path: '/article',
+        path: '/article/:articleID',
         component: Article
     },
     {
@@ -62,7 +62,7 @@ const routes = [
     },
     {
         name: 'EditArticle',
-        path: '/editArticle',
+        path: '/editArticle/:articleID',
         component: EditArticle
     },
     {

@@ -11,7 +11,7 @@
                     <span>{{ articleData.title }}</span>
                 </div>
                 <div class="writer">
-                    <span>{{ '作者：' + articleData.writer }}</span>
+                    <span>{{ '作者：' + articleData.writerName }}</span>
                 </div>
             </template>
             <div class="text item">{{ articleData.lastChange }}</div>
@@ -45,8 +45,51 @@
     </el-dialog> -->
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive, onMounted, onUpdated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
+
+const route = useRoute()
+
+onMounted(() => {
+    articleData.id = route.params.articleID
+    getArticleData()
+})
+
+function getArticleData() {
+    axios.get('/Article/ID/' + articleData.id)
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                // ElMessage({
+                //     message: res.message,
+                //     type: 'success',
+                // })
+                articleData.id = res.article.id
+                articleData.title = res.article.title
+                articleData.writerName = res.article.writerName
+                articleData.lastChange = res.article.lastChange
+                if ('requirement' in res.article) {
+                    isWriter.value = true
+                    articleData.requirement = res.article.requirement
+
+                } else {
+                    isWriter.value = false
+                }
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+}
 
 // const isVisible = ref(false)
 
@@ -62,10 +105,10 @@ import { useRoute, useRouter } from 'vue-router';
 //     isVisible.value = false
 // }
 
-const articleData = ref({
+const articleData = reactive({
     id: 0,
     title: '标题',
-    writer: '作者',
+    writerName: '作者',
     requirement: `
 yaoqiu
 123
@@ -74,7 +117,7 @@ yaoqiu
     lastChange: '2000-01-01'
 })
 
-const isWriter = ref(true)
+const isWriter = ref(false)
 
 const text = ref(`
 # 一级标题
@@ -95,6 +138,9 @@ function jump(name) {
     // console.log(router);
     router.push({
         name,
+        params: {
+            articleID: articleData.id
+        }
     })
 }
 </script>
