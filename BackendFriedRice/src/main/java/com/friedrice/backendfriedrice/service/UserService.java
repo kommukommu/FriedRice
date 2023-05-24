@@ -14,4 +14,5 @@ public interface UserService extends IService<User> {
     public List<Map<String, Object>> getUserMapsByID(List<Integer> ids);
 
     public Long countUsers(User user);
+    public String getUserNameByID (Integer id);
 }

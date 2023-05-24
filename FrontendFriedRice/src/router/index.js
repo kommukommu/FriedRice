@@ -32,7 +32,7 @@ const routes = [
     },
     {
         name: 'Project',
-        path: '/project',
+        path: '/project/:projectID',
         component: Project
     },
     {
@@ -70,8 +70,16 @@ const routes = [
         path: '/user/:id',
         component: Userpage,
         // props: true,
-        redirect: {
-            name: 'ProjectList'
+        redirect: to => {
+            // 方法接收目标路由作为参数
+            // return 重定向的字符串路径/路径对象
+            console.log(to);
+            return {
+                name: 'ProjectList',
+                params: {
+                    id: to.params.id
+                },
+            }
         },
         children: [
             // {
@@ -89,6 +97,7 @@ const routes = [
             {
                 name: 'ProjectList',
                 path: 'projectList',
+                // props: (to) => { console.log("route", to); },
                 component: ProjectList
             },
             {

@@ -9,4 +9,5 @@ public interface ProjectService extends IService<Project> {
     public List<Project> getProjectsByNameLike(String name);
     public List<Project> getProjectsByOwnerList(List<Integer> owners);
     public List<Project> getProjectsByOwnerList(Integer... owners);
+    public boolean updateProjectsByIDAndOwner(Project project);
 }

@@ -96,7 +96,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="isVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="createProject">
+          <el-button type="primary" @click="createProject" :loading="isLoading">
             Submit
           </el-button>
         </span>
@@ -151,6 +151,7 @@ function logout() {
           message: res.message,
           type: 'success',
         })
+        
       } else {
         ElMessage({
           message: res.message,
@@ -201,9 +202,37 @@ const form = reactive({
   desc: '',
 })
 
+const isLoading = ref(false)
+
 function createProject() {
+  isLoading.value = true
   console.log(form);
-  isVisible.value = false
+  axios.post('/Project', {
+    name: form.name,
+    description: form.desc
+  })
+    .then(function (response) {
+      const res = response.data
+      isLoading.value = false
+      console.log(response);
+      if (res.code == 0) {
+        ElMessage({
+          message: res.message,
+          type: 'success',
+        })
+        isVisible.value = false
+      } else {
+        ElMessage({
+          message: res.message,
+          type: 'error',
+        })
+      }
+    })
+    .catch(function (error) {
+      isLoading.value = false
+      console.log(error);
+    });
+
 }
 </script>
   

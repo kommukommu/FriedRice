@@ -47,4 +47,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .eq(user.getPassword() != null, User::getPassword, user.getPassword());
         return this.count(queryWrapper);
     }
+
+    @Override
+    public String getUserNameByID(Integer id) {
+        User user = getById(id);
+        if (user == null){
+            return null;
+        }
+        return user.getName();
+    }
 }

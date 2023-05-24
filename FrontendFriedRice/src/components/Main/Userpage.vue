@@ -63,7 +63,7 @@ onUpdated(() => {
     getUser()
 })
 
-function getUser(){
+function getUser() {
     // console.log(route)
     axios.get('/User/' + route.params.id)
         .then(function (response) {
@@ -112,7 +112,8 @@ function subscribe() {
 }
 
 function jump(name) {
-    console.log(router);
+    // console.log(router);
+    // console.log(route);
     router.push({
         name,
     })

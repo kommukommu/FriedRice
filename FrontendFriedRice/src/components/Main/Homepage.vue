@@ -14,7 +14,7 @@
                         <span>{{ i.name }}</span>
                     </div>
                     <div class="writer">
-                        <span>{{ '管理者:' + i.owner }}</span>
+                        <span>{{ '管理者:' + i.ownerName }}</span>
                     </div>
                 </template>
                 <div class="text item">{{ i.description }}</div>
@@ -83,7 +83,7 @@ function getProjects(url) {
 function searchByConditions() {
     let url = ""
     if (store.searchingConditions == "搜索项目管理员") {
-        url = '/Project/Owner/' + route.params.name
+        url = '/Project/OwnerName/' + route.params.name
     } else if (store.searchingConditions == "搜索项目名称") {
         url = '/Project/Name/' + route.params.name
     }
@@ -95,32 +95,35 @@ const data = ref([
         id: '1',
         name: 't1',
         description: 'd1',
-        owner: 'o1',
+        ownerName: 'o1',
     },
     {
         id: '2',
         name: 't2',
         description: 'd2',
-        owner: 'o1',
+        ownerName: 'o1',
     },
     {
         id: '3',
         name: 't3',
         description: 'd3',
-        owner: 'o1',
+        ownerName: 'o1',
     },
     {
         id: '4',
         name: 't4',
         description: 'd4',
-        owner: 'o1',
+        ownerName: 'o1',
     },
 ])
 
-function openNewProject(event, i) {
-    // alert(i)
+function openNewProject(event, id) {
+    // alert(id)
     router.push({
-        name: "Project"
+        name: "Project",
+        params: {
+            projectID: id
+        }
     });
 }
 </script>

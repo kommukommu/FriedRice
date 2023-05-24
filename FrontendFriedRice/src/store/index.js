@@ -20,9 +20,11 @@ export const store = reactive({
     },
     isSearchByConditions: false,
     startSearchByConditions() {
+        // this.isSearchByConditions = false
         this.isSearchByConditions = true
     },
     stopSearchByConditions() {
+        // this.isSearchByConditions = true
         this.isSearchByConditions = false
     },
     searchingConditions: "搜索项目名称",

@@ -8,37 +8,39 @@
                 <el-button v-if="isOwner" style="margin: 10px;" @click="isCreateVisible = true">添加文章</el-button>
                 <el-button v-if="isOwner" style="margin: 10px;" @click="swapArticles"
                     :disabled="notTwoArticles">交换文章顺序</el-button>
-                <el-button v-if="isOwner" style="margin: 10px;" type="danger" @click="handleDelete">删除</el-button>
+                <el-button v-if="isOwner" style="margin: 10px;" type="danger" @click="handleDelete">删除所选文章</el-button>
             </div>
-            <el-card class="box-card" shadow="hover">
+            <el-card class="box-card" shadow="hover" @click="openUserpage">
                 <template #header>
                     <div class="card-header">
                         <span>{{ projectData.name }}</span>
                     </div>
                     <div class="writer">
-                        <span>{{ projectData.owner }}</span>
+                        <span>{{ projectData.ownerName }}</span>
                     </div>
                 </template>
                 <div class="text item">
                     <div>{{ projectData.desc }}</div>
                 </div>
             </el-card>
-            <div style="position: absolute; width: 100%;">
-                <el-table :data="filterTableData" highlight-current-row @current-change="handleCurrentChange"
-                    @selection-change="handleSelectionChange">
-                    <el-table-column v-if="isOwner" type="selection" width="55" />
-                    <el-table-column label="Title" prop="title" min-width="200" />
-                    <el-table-column label="Writer" prop="writer" width="200" />
-                    <el-table-column align="right" width="250">
-                        <template #header>
-                            <el-input v-model="search" size="small" placeholder="Type to search" />
-                        </template>
-                        <template v-if="isOwner" #default="scope">
-                            <el-button size="small" @click="handleReview(scope.$index, scope.row)">审核</el-button>
-                            <!-- <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
-                        </template>
-                    </el-table-column>
-                </el-table>
+            <div style="width: 100%; position: relative; flex: 1;">
+                <div style="position: absolute; width: 100%;">
+                    <el-table :data="filterTableData" highlight-current-row @current-change="handleCurrentChange"
+                        @selection-change="handleSelectionChange">
+                        <el-table-column v-if="isOwner" type="selection" width="55" />
+                        <el-table-column label="Title" prop="title" min-width="120" />
+                        <el-table-column label="Writer" prop="writer" width="120" />
+                        <el-table-column align="right" width="200">
+                            <template #header>
+                                <el-input v-model="search" size="small" placeholder="Type to search" />
+                            </template>
+                            <template v-if="isOwner" #default="scope">
+                                <el-button size="small" @click="handleReview(scope.$index, scope.row)">审核</el-button>
+                                <!-- <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
             </div>
             <template class="space" />
         </el-space>
@@ -89,15 +91,53 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 import { Delete } from '@element-plus/icons-vue'
-import { reactive, markRaw, computed, ref, onMounted } from 'vue'
+import { reactive, markRaw, computed, ref, onMounted, onUpdated } from 'vue'
+import { store } from '../../store'
+import axios from 'axios';
 
-const isOwner = ref(true)
+// const isOwner = ref(true)
 const isChangeVisible = ref(false)
 const isCreateVisible = ref(false)
+const route = useRoute()
+const isOwner = computed(() => projectData.owner === store.userId)
 
 onMounted(() => {
-
+    projectData.id = route.params.projectID
+    getProjectData()
 })
+
+onUpdated(() => {
+    projectData.id = route.params.projectID
+    getProjectData()
+})
+
+function getProjectData() {
+    axios.get('/Project/ID/' + projectData.id)
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                // ElMessage({
+                //     message: res.message,
+                //     type: 'success',
+                // })
+                projectData.id = res.project.id
+                projectData.name = res.project.name
+                projectData.desc = res.project.description
+                projectData.owner = res.project.owner
+                projectData.ownerName = res.project.ownerName
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
 
 const formLabelWidth = 'auto'
 
@@ -108,13 +148,41 @@ const formChange = reactive({
 
 function initialiseFormChange() {
     isChangeVisible.value = true
-    formChange.name = projectData.value.name
-    formChange.desc = projectData.value.desc
+    formChange.name = projectData.name
+    formChange.desc = projectData.desc
 }
 
 function changeProject() {
     console.log(formChange);
-    isChangeVisible.value = false
+    axios.put('/Project', {
+        id: projectData.id,
+        owner: projectData.owner,
+        name: formChange.name,
+        description: formChange.desc,
+    })
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+                projectData.name = formChange.name
+                projectData.desc = formChange.desc
+                isChangeVisible.value = false
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
 }
 
 const formCreate = reactive({
@@ -194,10 +262,11 @@ function back() {
     router.back()
 }
 
-const projectData = ref({
+const projectData = reactive({
     id: 0,
-    name: 'projecrt',
-    owner: '123456',
+    name: 'project',
+    owner: -1,
+    ownerName: '123456',
     desc: `descde`,
 })
 
@@ -205,22 +274,18 @@ const tableData = ref([
     {
         title: '2016-05-03',
         writer: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
     },
     {
         title: '2016-05-02',
         writer: 'John',
-        address: 'No. 189, Grove St, Los Angeles',
     },
     {
         title: '2016-05-04',
         writer: 'Morgan',
-        address: 'No. 189, Grove St, Los Angeles',
     },
     {
         title: '2016-05-01',
         writer: 'Jessy',
-        address: 'No. 189, Grove St, Los Angeles',
     },
 ])
 
@@ -262,6 +327,15 @@ function handleDelete() {
                 message: 'Delete canceled',
             })
         })
+}
+
+function openUserpage() {
+    router.push({
+        name: "User",
+        params: {
+            id: projectData.owner,
+        }
+    })
 }
 
 </script>

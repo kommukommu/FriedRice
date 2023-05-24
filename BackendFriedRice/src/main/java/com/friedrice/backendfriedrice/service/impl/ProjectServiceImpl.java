@@ -1,6 +1,7 @@
 package com.friedrice.backendfriedrice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.friedrice.backendfriedrice.mapper.ProjectMapper;
@@ -30,5 +31,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Override
     public List<Project> getProjectsByOwnerList(Integer... owners) {
         return this.getProjectsByOwnerList(Arrays.asList(owners));
+    }
+
+    @Override
+    public boolean updateProjectsByIDAndOwner(Project project) {
+        LambdaUpdateWrapper<Project> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(Project::getId, project.getId())
+                .eq(Project::getOwner, project.getOwner())
+                .set(Project::getName, project.getName())
+                .set(Project::getDescription, project.getDescription());
+
+        return this.update(updateWrapper);
     }
 }
