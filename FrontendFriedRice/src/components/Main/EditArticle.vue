@@ -54,10 +54,34 @@ import axios from 'axios';
 const route = useRoute()
 
 onMounted(() => {
-    textChange.value = text.value
     articleData.id = route.params.articleID
     getArticleData()
+    getText()
 })
+
+function getText() {
+    axios.get('/Body/Latest/' + articleData.id)
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                // ElMessage({
+                //     message: res.message,
+                //     type: 'success',
+                // })
+                textChange.value = text.value = res.body.body
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
 
 function getArticleData() {
     axios.get('/Article/ID/' + articleData.id)

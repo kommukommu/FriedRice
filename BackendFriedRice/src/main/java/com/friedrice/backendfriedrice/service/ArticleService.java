@@ -11,5 +11,6 @@ public interface ArticleService extends IService<Article> {
     public Boolean addArticle(Article article);
     public Boolean swapArticles (List<Integer> ids);
     public Boolean changeRequirement (Article article);
+    public Boolean passReview(Article article);
     public Boolean removeArticles (List<Integer> ids);
 }

@@ -87,6 +87,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    public Boolean passReview(Article article) {
+        LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(Article::getId, article.getId())
+                .set(Article::getState, 1);
+        return this.update(updateWrapper);
+    }
+
+    @Override
     public Boolean removeArticles(List<Integer> ids) {
         if (ids.isEmpty()) return true;
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();

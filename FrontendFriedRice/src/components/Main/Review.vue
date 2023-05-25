@@ -71,7 +71,35 @@ const isVisible = ref(false)
 onMounted(() => {
     articleData.id = route.params.articleID
     getArticleData()
+    getText(text, false)
+    getText(textOld, true)
 })
+
+function getText(textRef, isOld) {
+    let url = '/Body/Latest/'
+    if (isOld) url = '/Body/Earlier/'
+    axios.get(url + articleData.id)
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                // ElMessage({
+                //     message: res.message,
+                //     type: 'success',
+                // })
+                textRef.value = res.body.body
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
 
 function getArticleData() {
     axios.get('/Article/Review/ID/' + articleData.id)
@@ -192,10 +220,11 @@ const passArticle = () => {
         }
     )
         .then(() => {
-            ElMessage({
-                type: 'success',
-                message: 'review completed',
-            })
+            // ElMessage({
+            //     type: 'success',
+            //     message: 'review completed',
+            // })
+            passReview()
         })
         .catch(() => {
             ElMessage({
@@ -203,6 +232,35 @@ const passArticle = () => {
                 message: 'review canceled',
             })
         })
+}
+
+function passReview(){
+    axios.put('/Article/Review', {
+        id: articleData.id,
+        project: articleData.project,
+    })
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+                // getArticleData()
+                // isVisible.value = false
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            // isVisible.value = false
+            console.log(error);
+        });
 }
 
 const text = ref(`
