@@ -32,10 +32,20 @@
             <v-md-preview :text="articleData.requirement"></v-md-preview>
         </el-card>
         <el-card class="body-card" shadow="hover">
+            <template #header>
+                <div class="card-header">
+                    <span>原文</span>
+                </div>
+            </template>
             <!-- <div v-for="o in 4" :key="o" class="text item">{{ '正文 ' + o }}</div> -->
             <v-md-preview :text="text"></v-md-preview>
         </el-card>
         <el-card>
+            <template #header>
+                <div class="card-header">
+                    <span>修改预览</span>
+                </div>
+            </template>
             <v-md-editor v-model="textChange" height="400px"></v-md-editor>
             <!-- <template>
                 <span class="dialog-footer">
@@ -71,6 +81,8 @@ function getText() {
                 //     type: 'success',
                 // })
                 textChange.value = text.value = res.body.body
+                bodyData.id = res.body.id
+                bodyData.parent = res.body.parent
             } else {
                 ElMessage({
                     message: res.message,
@@ -124,6 +136,31 @@ const textChange = ref('')
 
 function changeText() {
     console.log(textChange.value);
+    axios.put('/Body/' + articleData.id,{
+        id: bodyData.id,
+        parent: bodyData.parent,
+        body: textChange.value
+    })
+        .then(function (response) {
+            const res = response.data
+
+            console.log(response);
+            if (res.code == 0) {
+                ElMessage({
+                    message: res.message,
+                    type: 'success',
+                })
+                getText()
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 const articleData = reactive({
@@ -141,6 +178,11 @@ yaoqiu
 })
 
 const isWriter = ref(false)
+
+const bodyData = reactive({
+    id : 0,
+    parent: -1,
+})
 
 const text = ref(`
 # 一级标题

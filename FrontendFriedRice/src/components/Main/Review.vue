@@ -237,7 +237,7 @@ const passArticle = () => {
 function passReview(){
     axios.put('/Article/Review', {
         id: articleData.id,
-        project: articleData.project,
+        // project: articleData.project,
     })
         .then(function (response) {
             const res = response.data

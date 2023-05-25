@@ -218,16 +218,16 @@ public class ArticleController {
             return map;
         }
         article = articleService.getById(article.getId());
-        if (article.getState() == 1) {
-            map.put("code", -3);
-            map.put("message", "文章已通过审核");
-            return map;
-        }
         Project project = projectService.getById(article.getProject());
         Integer userID = Integer.parseInt(session.getAttribute("id").toString());
         if (!Objects.equals(project.getOwner(), userID)) {
             map.put("code", -2);
             map.put("message", "无法在非项目管理员的情况下修改审核状态");
+            return map;
+        }
+        if (article.getState() == 1) {
+            map.put("code", -3);
+            map.put("message", "文章已通过审核");
             return map;
         }
         if (articleService.passReview(article)) {
