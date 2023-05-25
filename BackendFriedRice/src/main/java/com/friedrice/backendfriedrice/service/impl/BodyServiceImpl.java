@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class BodyServiceImpl extends ServiceImpl<BodyMapper, Body> implements BodyService {
@@ -108,6 +109,6 @@ public class BodyServiceImpl extends ServiceImpl<BodyMapper, Body> implements Bo
                 .eq(Body::getIsLatest, 1);
         Body latest = this.getOne(latestLambdaQueryWrapper);
         Integer newID = latest.getId();
-        if (newID != oldID) throw new RuntimeException("IDs do not match");
+        if (!Objects.equals(newID, oldID)) throw new RuntimeException("IDs do not match");
     }
 }

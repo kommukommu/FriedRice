@@ -198,7 +198,7 @@ public class ArticleController {
             map.put("message", "无法在非项目管理员的情况下修改文章");
             return map;
         }
-        if (articleService.changeRequirement(article)) {
+        if (Boolean.TRUE.equals(articleService.changeRequirement(article))) {
             map.put("code", 0);
             map.put("message", "文章修改成功");
             return map;
@@ -230,7 +230,7 @@ public class ArticleController {
             map.put("message", "文章已通过审核");
             return map;
         }
-        if (articleService.passReview(article)) {
+        if (Boolean.TRUE.equals(articleService.passReview(article))) {
             map.put("code", 0);
             map.put("message", "审核状态修改成功");
             return map;
