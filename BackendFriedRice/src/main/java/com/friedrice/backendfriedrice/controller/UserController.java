@@ -138,7 +138,7 @@ public class UserController {
         subscription.setSubscriber(Integer.parseInt(session.getAttribute("id").toString()));
         List<Subscription> subscriptionList = subscriptionService.getSubscriptions(subscription);
         logger.info("subscriptionList->%s".formatted(subscriptionList.toString()));
-        if (subscriptionList.isEmpty()) {
+        if (subscriptionList.isEmpty() && !isSelf) {
             return new ArrayList<>();
         }
         List<Integer> idList = new ArrayList<>();

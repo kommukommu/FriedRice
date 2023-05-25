@@ -29,7 +29,7 @@
                         @selection-change="handleSelectionChange">
                         <el-table-column v-if="isOwner" type="selection" width="55" />
                         <el-table-column label="Title" prop="title" min-width="120" />
-                        <el-table-column label="Writer" prop="writer" width="120" />
+                        <el-table-column label="Writer" prop="writerName" width="120" />
                         <el-table-column align="right" width="200">
                             <template #header>
                                 <el-input v-model="search" size="small" placeholder="Type to search" />

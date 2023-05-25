@@ -22,6 +22,7 @@ server:
       cookie:
         max-age: 30m
       timeout: 30m
+    context-path: /api
   port: 4030
 
 logging:
