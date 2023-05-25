@@ -70,6 +70,8 @@ function getArticleData() {
                 articleData.id = res.article.id
                 articleData.title = res.article.title
                 articleData.writerName = res.article.writerName
+                articleData.writer = res.article.writer
+                articleData.writerName = res.article.writerName
                 articleData.lastChange = res.article.lastChange
                 if ('requirement' in res.article) {
                     isWriter.value = true
@@ -109,6 +111,8 @@ const articleData = reactive({
     id: 0,
     title: '标题',
     writerName: '作者',
+    writer: -1,
+    project: -1,
     requirement: `
 yaoqiu
 123

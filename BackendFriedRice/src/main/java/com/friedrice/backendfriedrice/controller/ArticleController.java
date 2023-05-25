@@ -66,20 +66,38 @@ public class ArticleController {
         return map;
     }
 
-    @GetMapping("/Article/ID/{id}")
-    public Map<String, Object> getArticle(@PathVariable("id") Integer aritcleID) {
+    @GetMapping("/Article/Review/ID/{id}")
+    public Map<String, Object> getReviewingArticle(@PathVariable("id") Integer aritcleID) {
         Map<String, Object> map = new HashMap<>();
-        boolean isWriter = false;
+        boolean isManager = false;
         Article article = articleService.getById(aritcleID);
+        Project project = projectService.getById(article.getProject());
         HttpSession session = request.getSession(false);
         if (session != null) {
             Integer userID = Integer.parseInt(session.getAttribute("id").toString());
-            if (Objects.equals(article.getWriter(), userID)) isWriter = true;
+            if (project.getOwner().equals(userID)) isManager = true;
         }
 
         map.put("code", 0);
         map.put("message", "文章查询成功");
-        map.put("article", createArticleMap(article, isWriter));
+        map.put("article", createArticleMap(article, isManager));
+        return map;
+    }
+
+    @GetMapping("/Article/ID/{id}")
+    public Map<String, Object> getArticle(@PathVariable("id") Integer aritcleID) {
+        Map<String, Object> map = new HashMap<>();
+        boolean isManager = false;
+        Article article = articleService.getById(aritcleID);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Integer userID = Integer.parseInt(session.getAttribute("id").toString());
+            if (Objects.equals(article.getWriter(), userID)) isManager = true;
+        }
+
+        map.put("code", 0);
+        map.put("message", "文章查询成功");
+        map.put("article", createArticleMap(article, isManager));
         return map;
     }
 
@@ -154,6 +172,32 @@ public class ArticleController {
             return map;
         }
         if (result) {
+            map.put("code", 0);
+            map.put("message", "文章修改成功");
+            return map;
+        }
+        map.put("code", -100);
+        map.put("message", "未知原因失败");
+        return map;
+    }
+
+    @PutMapping("/Article")
+    public Map<String, Object> chagneRequirement(@RequestBody Article article) {
+        Map<String, Object> map = new HashMap<>();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            map.put("code", -1);
+            map.put("message", "请先登录");
+            return map;
+        }
+        Project project = projectService.getById(article.getProject());
+        Integer userID = Integer.parseInt(session.getAttribute("id").toString());
+        if (!Objects.equals(project.getOwner(), userID)) {
+            map.put("code", -2);
+            map.put("message", "无法在非项目管理员的情况下修改文章");
+            return map;
+        }
+        if (articleService.changeRequirement(article)) {
             map.put("code", 0);
             map.put("message", "文章修改成功");
             return map;

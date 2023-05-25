@@ -42,7 +42,7 @@ const routes = [
     },
     {
         name: 'Review',
-        path: '/review',
+        path: '/review/:articleID',
         component: Review
     },
     {

@@ -15,7 +15,7 @@
                     <span>{{ articleData.title }}</span>
                 </div>
                 <div class="writer">
-                    <span>{{ '作者：' + articleData.writer }}</span>
+                    <span>{{ '作者：' + articleData.writerName }}</span>
                 </div>
             </template>
             <div class="text item">{{ articleData.lastChange }}</div>
@@ -73,6 +73,8 @@ function getArticleData() {
                 articleData.id = res.article.id
                 articleData.title = res.article.title
                 articleData.writerName = res.article.writerName
+                articleData.writer = res.article.writer
+                articleData.writerName = res.article.writerName
                 articleData.lastChange = res.article.lastChange
                 if ('requirement' in res.article) {
                     isWriter.value = true
@@ -103,7 +105,9 @@ function changeText() {
 const articleData = reactive({
     id: 0,
     title: '标题',
-    writer: '作者',
+    writerName: '作者',
+    writer: -1,
+    project: -1,
     requirement: `
 yaoqiu
 123

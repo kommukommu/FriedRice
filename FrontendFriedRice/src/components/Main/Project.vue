@@ -401,7 +401,10 @@ function openArticle() {
 function handleReview(index, row) {
     console.log(index, row);
     router.push({
-        name: "Review"
+        name: "Review",
+        params: {
+            articleID: row.id
+        }
     });
 }
 
